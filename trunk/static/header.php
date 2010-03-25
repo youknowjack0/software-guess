@@ -38,6 +38,7 @@ $HeadURL: https://software-guess.googlecode.com/svn/trunk/index.php $
 <head>
 <title>GUESS: <?php echo $header_title ?></title>
 <?php echo $header_extra ?>
+<link rel="stylesheet" href="static/shared.css" type="text/css">
 </head>
 <body <?php echo $header_bodytag_extra ?>>
 <a href="index.php"><h1>GUESS</h1></a>

@@ -49,9 +49,9 @@ $Author$
     // is displayed. The "file" field determines which page is called to handle
     // the user when the button/input is pressed/submitted.    
     $biglinks_items = array(
-        array("name" => "New Estimate", "file" => "new.php", "image" => "", "type" => "button"), //todo: create images
-        array("name" => "Existing Estimate", "file" => "edit.php", "image" => "", "type" => "input"),
-        array("name" => "Calibrate", "file" => "calibrate.php", "image" => "", "type" => "button")
+        array("name" => "New Estimate", "file" => "new.php", "image" => "copyrightimages/pencil.png", "type" => "button"), //todo: create images
+        array("name" => "Existing Estimate", "file" => "edit.php", "image" => "copyrightimages/load.png", "type" => "input"),
+        array("name" => "Calibrate", "file" => "calibrate.php", "image" => "copyrightimages/tools.png", "type" => "button")
     );
     require 'templates/biglinks.php';
     
