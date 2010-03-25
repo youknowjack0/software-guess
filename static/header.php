@@ -1,4 +1,5 @@
-<?php /*
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- 
 Copyright (c) 2010 Jack Langman, Daniel Fozdar, Nelson Yiap, Zhihua Guo, 
                    Vivek Koul & Aaron Taylor
 All rights reserved.
@@ -25,36 +26,19 @@ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT 
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
-
-// Header file to show title, load styles, etc...
-$header_title = "GUESS";
-require 'static/header.php';
-
-?>
-<!--
-FILE INFO: index.php
-$LastChangedDate$
-$Revision$
-$Author$
--->
-<?php
-
-    // This file just creates a launcher page with some buttons to do various 
-    // stuff. It achieves this by setting some variables which are passed to the
-    // template file: "biglinks.php"
-    //
-    // The $buttons var is passed to the biglinks file. Each nested array rep-
-    // resents 1 button/link. The "type" field determines how the button/link
-    // is displayed. The "file" field determines which page is called to handle
-    // the user when the button/input is pressed/submitted.    
-    $buttons = array(
-        array("name" => "New Estimate", "file" => "new.php", "image" => "", "type" => "button"), //todo: create images
-        array("name" => "Existing Estimate", "file" => "edit.php", "image" => "", "type" => "input"),
-        array("name" => "Calibrate", "file" => "calibrate.php", "image" => "", "type" => "input")
-    );
-    require 'templates/biglinks.php';
-    
-    // Footer file to show some copyright info etc...
-    require 'static/footer.php';
-?>
+ -->
+<!--  
+FILE INFO: header.php
+$LastChangedDate: 2010-03-25 17:48:06 +0800 (Thu, 25 Mar 2010) $
+$Revision: 3 $
+$Author: youknowjack@gmail.com $
+$HeadURL: https://software-guess.googlecode.com/svn/trunk/index.php $
+ -->
+<html>
+<head>
+<title><?php echo $header_title ?></title>
+</head>
+<body>
+<h1>GUESS</h1>
+Todo: formatting etc.. here
+<hr />
