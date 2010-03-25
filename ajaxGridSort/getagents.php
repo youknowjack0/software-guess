@@ -12,7 +12,8 @@
 // | Last Modified    	: 28-08-2006                  						|
 // | Last Modified By 	: Neeraj Thakur                  					|
 // +------------------------------------------------------------------------+
-
+// 
+// Modified by Jack Langman
 class clsAJAX
 {
     public $dbhost;
@@ -20,19 +21,23 @@ class clsAJAX
     public $dbpass;
     public $dbname;
 
-    private $numFields = 6;
-    private $arrTable = "projecthistory";
-    public $arrFields = array('ID', 'Project Name','Domain Experience','Field Experience','Estimated Effort','Actual Effort');
-    public $arrValidate = array('', '[0-9a-zA-Z\\-]+', '\\d+', '\\d+', '\\d+', '\\d+');
-    public $arrRange = array(0, 0, array(1, 10), array(1, 10), 0, 0);
+    private $numFields;
+    private $arrTable;
+    public $arrFields;
+    private $filename;
     
-    public function __construct()
+    public function __construct($ags_numFields,$ags_arrFields, $ags_filename, $ags_table)
     {
         $dbhost = "localhost";
         $dbuname = "root";
         $dbpass = "getout";
         $dbname = "GUESS";
 
+        $this->numFields = $ags_numFields;
+        $this->arrFields = $ags_arrFields;
+        $this->filename = $ags_filename;
+        $this->arrTable = $ags_table;
+        
         $db = mysql_connect($dbhost, $dbuname, $dbpass);
         if (!$db) {  die('There was a problem with the database, please try back later'); }
         mysql_select_db($dbname, $db);
@@ -40,6 +45,7 @@ class clsAJAX
 
     public function showList($id='')
     {
+
         $textout = "";
         $param = addslashes($_GET['param']);
         $dir = addslashes($_GET['dir']);
@@ -177,7 +183,7 @@ class clsAJAX
     }
 }
 
-$obj = new clsAJAX();
+$obj = new clsAJAX($ags_numFields,$ags_arrFields, $ags_filename, $ags_table);
 
 if ( $_REQUEST['mode'] == "delete" )
 {

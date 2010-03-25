@@ -1,7 +1,25 @@
-var numFields = 6;
-var arrValidate = new Array('', '[0-9a-zA-Z\\-]+', '\\d+', '\\d+', '\\d+', '\\d+');
-var arrRange = new Array(0, 0, new Array(1, 10), new Array(1, 10), 0, 0);
-var arrFields = new Array('ID', 'Project Name','Domain Experience','Field Experience','Estimated Effort','Actual Effort');
+/*
+ * Neeraj Thakur
+ * Sr.. Developer
+ *
+ * Modified by Jack Langman
+ */
+
+var numFields;
+var arrValidate;
+var arrRange;
+var arrFields;
+var filename;
+var url;
+
+function ags_init(ags_numFields, ags_arrValidate, ags_arrRange, ags_arrFields, ags_filename) {
+	numFields = ags_numFields;
+	arrValidate = ags_arrValidate;
+	arrRange = ags_arrRange;
+	arrFields = ags_arrFields;
+	filename = ags_filename;
+	url = filename + "?param="; // The server-side scripts	
+}
 
 function GetXmlHttpObject(handler)
 { 
@@ -43,7 +61,7 @@ function GetXmlHttpObject(handler)
 	}
 }
 
-var url = "getagents.php?param="; // The server-side scripts	
+
 
 function getagents(column,direc) {		
 	var myRandom=parseInt(Math.random()*99999999);  // cache buster
@@ -66,7 +84,7 @@ function saveRecord(mode,id,param,dir)
 
 	var myRandom=parseInt(Math.random()*99999999);  // cache buster
 	xmlHttp=GetXmlHttpObject(handleHttpResponse);
-	xmlHttp.open("GET","getagents.php?" + str + "mode="+mode+"&param=" + escape(param) + "&dir=" + dir + "&rand=" + myRandom, true);
+	xmlHttp.open("GET",filename+"?" + str + "mode="+mode+"&param=" + escape(param) + "&dir=" + dir + "&rand=" + myRandom, true);
 	xmlHttp.send(null);
 }
 
@@ -83,7 +101,7 @@ function saveNewRecord(mode,param,dir)
 
 	var myRandom=parseInt(Math.random()*99999999);  // cache buster
 	xmlHttp=GetXmlHttpObject(handleHttpResponse);
-	xmlHttp.open("GET","getagents.php?"+str+"mode="+mode+"&param=" + escape(param) + "&dir=" + dir + "&rand=" + myRandom, true);
+	xmlHttp.open("GET",filename+"?"+str+"mode="+mode+"&param=" + escape(param) + "&dir=" + dir + "&rand=" + myRandom, true);
 	xmlHttp.send(null);	
 
 }
@@ -92,7 +110,7 @@ function newRecord(mode,param,dir)
 {
 	var myRandom=parseInt(Math.random()*99999999);  // cache buster
 	xmlHttp=GetXmlHttpObject(handleHttpResponse);
-	xmlHttp.open("GET","getagents.php?mode="+mode+"&param=" + escape(param) + "&dir=" + dir + "&rand=" + myRandom, true);
+	xmlHttp.open("GET",filename+"?mode="+mode+"&param=" + escape(param) + "&dir=" + dir + "&rand=" + myRandom, true);
 	xmlHttp.send(null);
 }
 
@@ -107,7 +125,7 @@ function manipulateRecord(mode,id,param,dir)
 
 	var myRandom=parseInt(Math.random()*99999999);  // cache buster
 	xmlHttp=GetXmlHttpObject(handleHttpResponse);
-	xmlHttp.open("GET","getagents.php?ID="+id+"&mode="+mode+"&param=" + escape(param) + "&dir=" + dir + "&rand=" + myRandom, true);
+	xmlHttp.open("GET",filename+"?ID="+id+"&mode="+mode+"&param=" + escape(param) + "&dir=" + dir + "&rand=" + myRandom, true);
 	xmlHttp.send(null);
 }	
 
@@ -119,9 +137,15 @@ function validate() {
 		}
 		re = new RegExp(arrValidate[i]);
 		element = document.getElementById("f"+i);
-		var result = re.exec(element.value);
-		if (result != element.value) {
-			alert("Invalid input for '" + arrFields[i] + "'. Should match regex: /"+arrValidate[i]+"/"); 	
+		var result = re.exec(trim(element.value));
+		var fail = false;
+		if (!result) {
+			fail=true;
+		} else if (result[0] != trim(element.value)) {
+			fail=true;
+		}
+		if(fail) {
+			alert("Input '"+element.value+"' is invalid for '" + arrFields[i] + "'. Should match regex: /"+arrValidate[i]+"/");
 			return false;
 		}
 	}
@@ -138,6 +162,10 @@ function validate() {
 		}
 	}
 	return true;
+}
+
+trim = function(str) {
+	return str.replace(/^\s+|\s+$/g,"");
 }
 
 function handleHttpResponse() {

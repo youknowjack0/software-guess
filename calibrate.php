@@ -27,34 +27,33 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-// Header file to show title, load styles, etc...
-$header_title = "Home";
-require 'static/header.php';
-
 ?>
 <!--
-FILE INFO: index.php
-$LastChangedDate$
-$Revision$
-$Author$
+FILE INFO: calibrate.php
+$LastChangedDate: 2010-03-25 19:16:27 +0800 (Thu, 25 Mar 2010) $
+$Revision: 5 $
+$Author: youknowjack@gmail.com $
 -->
-<?php
+<?php 
+    // setup some vars for the grid
+    $header_extra = '<script language="javascript" src="ajaxGridSort/ajax.js"></script>';
+    $header_extra .= '<script language="javascript">
+		var ags_numFields = 6;
+		var ags_arrValidate = new Array("", "[0-9a-zA-Z\\\\n\\\\-]+", "\\\\d*\\\\.?\\\\d+", "\\\\d*\\\\.?\\\\d+", "\\\\d*\\\\.?\\\\d+", "\\\\d*\\\\.?\\\\d+");
+		var ags_arrRange = new Array(0, 0, new Array(1, 10), new Array(1, 10), 0, 0);
+		var ags_filename = "calibrate-grid.php";
+		var ags_arrFields = new Array("ID", "Project Name","Domain Experience","Field Experience","Estimated Effort","Actual Effort");
+		ags_init(ags_numFields, ags_arrValidate, ags_arrRange, ags_arrFields, ags_filename);
+		</script>
+		<link rel="stylesheet" href="ajaxGridSort/css.css" type="text/css">';
 
-    // This file just creates a launcher page with some buttons to do various 
-    // stuff. It achieves this by setting some variables which are passed to the
-    // template file: "biglinks.php"
-    //
-    // The $biglinks_items var is passed to the biglinks file. Each nested array 
-    // represents 1 button/link. The "type" field determines how the button/link
-    // is displayed. The "file" field determines which page is called to handle
-    // the user when the button/input is pressed/submitted.    
-    $biglinks_items = array(
-        array("name" => "New Estimate", "file" => "new.php", "image" => "", "type" => "button"), //todo: create images
-        array("name" => "Existing Estimate", "file" => "edit.php", "image" => "", "type" => "input"),
-        array("name" => "Calibrate", "file" => "calibrate.php", "image" => "", "type" => "button")
-    );
-    require 'templates/biglinks.php';
-    
+     // Header file to show title, load styles, etc...
+    $header_title = "Calibration";
+    $header_bodytag_extra = "onLoad=\"getagents('ID','')\"";
+    require 'static/header.php';
+?>
+<div id="hiddenDIV" style="visibility:hidden; background-color:white; border: 0px solid black;"></div>
+<?php 
     // Footer file to show some copyright info etc...
     require 'static/footer.php';
 ?>
