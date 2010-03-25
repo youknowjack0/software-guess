@@ -33,3 +33,46 @@ $LastChangedDate: 2010-03-25 17:48:06 +0800 (Thu, 25 Mar 2010) $
 $Revision: 3 $
 $Author: youknowjack@gmail.com $
 -->
+<?php
+
+    // this file expects $biglinks_items passed to it as an nested array of
+    //  items
+    // structure:
+    // "name", "file", "type", "image"
+    //  name: button/link name shown on the page
+    //  file: file to handle the button/input
+    //  type: "button" or "input" -- input can be used for search or w/e
+    //  image: image to use for the button
+    // example:
+    // $biglinks_items = array(
+    //    array("name" => "New Estimate", "file" => "new.php", "image" => "", "type" => "button"), //todo: create images
+    //    array("name" => "Existing Estimate", "file" => "edit.php", "image" => "", "type" => "input"),
+    //    array("name" => "Calibrate", "file" => "calibrate.php", "image" => "", "type" => "input")
+    // );
+    //
+    // For input types, the user input will be passed as an url parameter named
+    //  'input'
+    //
+    // Styles:
+    // todo: define styles
+    // #biglinks_buttons -- wraps around all items
+    // .biglinks_button -- each item
+    // .biglinks_image -- the images
+    
+    echo "<div id=\"biglinks_buttons\">";
+    foreach ($biglinks_items as $item) {
+        echo "<div class=\"biglinks_button\">";
+        if ($item["type"] == "button") {
+            printf('<a href="%s"><img src="%s" class="biglinks_image" alt="%s" /></a>', $item["file"], $item["image"], $item["name"]);
+        } elseif ($item["type"] == "input") {
+            printf('<form method="GET" action="%s" >', $item["file"]);
+            printf('<img src="%s" class="biglinks_image" alt="%s" /><br />', $item["image"], $item["name"]);
+            echo '<input type="text" name="input" />';
+            echo '<input type="submit" name="submit" value="Go" />';
+            echo '</form>';
+        }        
+        echo "</div>";
+    }
+    echo "</div>";
+
+?>
