@@ -1,0 +1,30 @@
+@CHARSET "ISO-8859-1";
+
+/* biglinks.php */
+
+#biglinks_buttons {
+	
+}
+
+.biglinks_button {
+	
+	display: table-cell;
+	border-style: solid;
+	border-color: #cccccc;
+	border-width: 1px;
+	margin: 20px;
+	padding: 20px;
+	height: 150px;
+	width: 150px;
+	text-align: center;
+	vertical-align: middle;
+	background-color: #EFB;
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+	
+		
+}
+
+.biglinks_image {
+	border: none;
+}

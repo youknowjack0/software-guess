@@ -63,10 +63,10 @@ $Author: youknowjack@gmail.com $
     foreach ($biglinks_items as $item) {
         echo "<div class=\"biglinks_button\">";
         if ($item["type"] == "button") {
-            printf('<a href="%s"><img src="%s" class="biglinks_image" alt="%s" /></a>', $item["file"], $item["image"], $item["name"]);
+            printf('<a href="%s"><img src="%s" class="biglinks_image" alt="%s" /><br />%s</a>', $item["file"], $item["image"], $item["name"], $item["name"]);
         } elseif ($item["type"] == "input") {
             printf('<form method="GET" action="%s" >', $item["file"]);
-            printf('<img src="%s" class="biglinks_image" alt="%s" /><br />', $item["image"], $item["name"]);
+            printf('<img src="%s" class="biglinks_image" alt="%s" /><br />%s<br />', $item["image"], $item["name"], $item["name"]);
             echo '<input type="text" name="input" />';
             echo '<input type="submit" name="submit" value="Go" />';
             echo '</form>';
