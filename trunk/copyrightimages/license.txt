@@ -1,0 +1,9 @@
+Icons in this folder are used with permission as per the GPL license: http://www.gnu.org/copyleft/gpl.html
+
+Made by Andy Fitzsimon (andy@fitzsimon.com.au)
+
+[Illustration]
+Andrew Fitzsimon andrew@fitzsimon.com.au
+
+[Pixel Cleanup]
+Chad 'gonZo' Rodrigue
