@@ -36,9 +36,11 @@ $HeadURL: https://software-guess.googlecode.com/svn/trunk/index.php $
  -->
 <html>
 <head>
-<title><?php echo $header_title ?></title>
+<title>GUESS: <?php echo $header_title ?></title>
+<?php echo $header_extra ?>
 </head>
-<body>
-<h1>GUESS</h1>
+<body <?php echo $header_bodytag_extra ?>>
+<a href="index.php"><h1>GUESS</h1></a>
+<h2><?php echo $header_title ?></h2>
 Todo: formatting etc.. here
 <hr />
