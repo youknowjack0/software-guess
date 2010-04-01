@@ -38,26 +38,28 @@ ob_start();
 require 'components/inputform.php';
 
 $form = new InputForm(-1, "GET", "new.php");
-$form->setRequest($_REQUEST); //note this must be set before adding inputs
 
 // public estimate identifier code
 // TODO: check identifiers in the database before using
 $ident = strtoupper(base_convert(mt_rand(100000,999999999999), 10, 36));
 $input = new InputText("AccessCode", "AccessCode", "Access Code", "[0-9a-zA-Z]{3,69}", $ident, $minlen=-1, $maxlen=-1, true);
-$input->setInputClass("accessCode");
 $input->setLabelClass("accessCode");
-$input->setHelp("This access code is the only way to access your saved estimate (please write it down). The code also serves as a unique identifier for this estimate.");
+$input->setHelp("This access code is the only way to access your saved estimate (please write it down). The code also serves as a unique identifier for this estimate. You cannot change this value.");
 $form->addInput($input);
-$input = new InputText("ProjectName", "ProjectName", "Project Name", "[a-zA-Z0-9\-' _]+", "Stephen'~aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaas Mega Project-X", 3, 64);
-$input->setHelp("This is the name of your projet. You can change this at a later time; it is for your personal identification purposes only");
+$input = new InputText("ProjectName", "ProjectName", "Project Name", "[a-zA-Z0-9\-' _]*", "", 3, 64);
+$input->setHelp("This is the name of your project. You can change this at a later time; it is for identification purposes only");
 $form->addInput($input);
-$input = new InputText("ProjectName2", "ProjectName2", "Project Name", "[a-zA-Z0-9\-' _]+", "Stephen'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaas Mega Project-X", 3, 64);
-$input->setHelp("This is the name of your projet. You can change this at a later time; it is for your personal identification purposes only");
+$input = new InputText("ProjectOwner", "ProjectOwner", "Project Owner", "[a-zA-Z\-' ]*", "", 3, 48);
+$input->setHelp("This is the name of the project owner (e.g. the project manager). You can change this at a later time; it is for identification purposes only");
+$form->addInput($input);
+$input = new InputText("LastIteration", "LastIteration", "Estimate Version", "[0-9]+", 0, -1, -1, true);
+$input->setHelp("this is the estimate version - it always begins at zero. This number will be iterated automatically as the estimate is revised. You cannot change this number manually.");
 $form->addInput($input);
 
 
 // if the user has submitted the form, handle the result
-if (1==1) {    //$form->isResult()) {
+$form->setRequest($_REQUEST);
+if ($form->isResult()) {
     if ($form->isValid()) {
         // update table & forward
     } else {
@@ -71,7 +73,11 @@ $header_title = "New Estimate";
 $header_extra = '<link rel="stylesheet" href="static/forms.css" type="text/css" />';
 
 // print form
+$form->printHeader();
 $form->printBody();
+print("<br /><br />");
+$form->printFooter();
+print("<br />");
 
 // load template
 $template_body = ob_get_clean();
