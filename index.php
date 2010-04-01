@@ -47,7 +47,7 @@ array("name" => "New Estimate", "file" => "new.php", "image" => "copyrightimages
 array("name" => "Existing Estimate", "file" => "edit.php", "image" => "copyrightimages/load.png", "type" => "input"),
 array("name" => "Calibrate", "file" => "calibrate.php", "image" => "copyrightimages/tools.png", "type" => "button")
 );
-require 'templates/biglinks.php';
+require 'components/biglinks.php';
 
 
 // Footer file to show some copyright info etc...

@@ -46,6 +46,8 @@ $Author: youknowjack@gmail.com $
         var $handler;
         var $currentfile;
         var $inputs = array();
+        var $req;
+        var $errormessage;
         
         public function __construct($type, $method, $currentfile) {
             $this->type = $type;
@@ -78,8 +80,28 @@ $Author: youknowjack@gmail.com $
         
         public function printBody() {
             foreach($this->inputs as $i) {
-                print($i->html() . "<br />");
+                print($i->html());
             }
+        }
+        
+        public function setRequest($req) {
+            $this->req = $req;
+        }
+        
+        public function isValid() {
+            $this->errormessage = "";
+            $isValid=true;
+            foreach($this->inputs as $i) {
+                if(!$i->isValid()) {
+                    $this->errormessage .= $i->getErrorMessage() . "<br />";
+                    $isValid = false;
+                }
+            }
+            return $isValid;
+        }
+        
+        public function getError() {
+            return $this->errormessage;
         }
         
     }

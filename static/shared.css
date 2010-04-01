@@ -28,3 +28,23 @@
 .biglinks_image {
 	border: none;
 }
+
+.error {
+	display: block;
+	border-style: solid;
+	border-color: #900;
+	border-width: 3px;
+	margin: 5px;
+	padding: 10px;
+	text-align: center;
+	color: red;
+}
+
+.help {
+	border-style: solid;
+	border-color: #009;
+	border-width: 1px;
+	margin: 3px;
+	padding: 5px;
+	color: navy;
+}

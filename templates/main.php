@@ -45,6 +45,7 @@ $HeadURL: https://software-guess.googlecode.com/svn/trunk/index.php $
 <h2><?php echo $header_title ?></h2>
 Todo: formatting etc.. here
 <hr />
+<?php if(isset($template_error) && $template_error != "") { ?><div class="error"><?php echo $template_error; ?></div><?php } ?>
 <?php echo $template_body; ?>
 <hr />
 Todo: copyright notice etc.. here
