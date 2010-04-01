@@ -1,3 +1,5 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- COPYRIGHT NOTICE: Please see copyright.txt  -->
 <?php /*
 Copyright (c) 2010 Jack Langman, Daniel Fozdar, Nelson Yiap, Zhihua Guo,
 Vivek Koul & Aaron Taylor
@@ -26,43 +28,25 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-FILE INFO: new.php
-$LastChangedDate: 2010-03-26 07:38:15 +0800 (Fri, 26 Mar 2010) $
-$Revision: 9 $
+FILE INFO: templates/main.php
+$LastChangedDate: 2010-03-25 17:48:06 +0800 (Thu, 25 Mar 2010) $
+$Revision: 3 $
 $Author: youknowjack@gmail.com $
-*/
-
-ob_start();
-
-// Create instance of InputForm class
-require 'templates/inputform.php';
-
-$form = new InputForm(-1, "GET", "new.php");
-
-// public estimate identifier code
-// TODO: check identifiers in the database before using
-$ident = strtoupper(base_convert(mt_rand(100000,999999999999), 10, 36));
-$input = new InputText("AccessCode", "AccessCode", "Access Code", "[0-9a-zA-Z]+", $ident, $minlen=-1, $maxlen=-1, true);
-$input->setInputClass("accessCode");
-$input->setLabelClass("accessCode");
-$form->addInput($input);
-$input = new HTML("The above code is the only way to access your saved estimate (please write it down). <br />");
-$form->addInput($input);
-
-
-// if the user has submitted the form, handle the result
-if ($form->isResult()) {
-    $form->updateTable("tablenamexxx");
-}
-
-// Header file to show title, load styles, etc...
-$header_title = "New Estimate";
-$header_extra = '<link rel="stylesheet" href="static/forms.css" type="text/css">';
-
-// print form
-$form->printBody();
-
-// load template
-$template_body = ob_get_clean();
-require 'templates/main.php'
-?>
+$HeadURL: https://software-guess.googlecode.com/svn/trunk/index.php $
+*/ ?>
+<html>
+<head>
+<title>GUESS: <?php echo $header_title ?></title>
+<?php if(isset($header_extra)) {echo $header_extra;} ?>
+<link rel="stylesheet" href="static/shared.css" type="text/css" />
+</head>
+<body <?php if (isset($header_bodytag_extra)) {echo $header_bodytag_extra;} ?>>
+<a href="index.php"><h1>GUESS</h1></a>
+<h2><?php echo $header_title ?></h2>
+Todo: formatting etc.. here
+<hr />
+<?php echo $template_body; ?>
+<hr />
+Todo: copyright notice etc.. here
+</body>
+</html>

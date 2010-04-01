@@ -25,16 +25,13 @@ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT 
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
-?>
-<!--
+
 FILE INFO: inputform.php
 $LastChangedDate: 2010-03-25 17:48:06 +0800 (Thu, 25 Mar 2010) $
 $Revision: 3 $
 $Author: youknowjack@gmail.com $
--->
-<?php
-    
+
+*/
     require 'components/Input.php';
 
     // this file exposes the InputForm class
@@ -43,29 +40,46 @@ $Author: youknowjack@gmail.com $
         
         public static $NEW_RECORD = 1;
         public static $UPDATE_RECORD = 2;
-        private $type;
-        private $method;
-        private $target;
-        private $handler;
-        private $table;        
-        private $currentfile;
-        private $inputs;
+        var $type;
+        var $method;
+        var $target;
+        var $handler;
+        var $currentfile;
+        var $inputs = array();
         
-        public function __construct($type, $method, $redirect, $currentfile, $handler, $table, $inputs) {
+        public function __construct($type, $method, $currentfile) {
             $this->type = $type;
             $this->method = $method;
-            $this->target = $redirect;
             $this->currentfile = $currentfile;
-            $this->table = $table;
-            $this->columns = $columns;
-            $this->validate = $validate;
-            $this->handler = $handler;
-            $this->inputs = $inputs;
+        }
+        
+        // has the user filled out the form
+        public function isResult() {
+        
+        }
+        
+        // name indexed associative array?
+        public function getResults() {
+            
         }
         
         public function headers() {
-            $i = new InputText("testf", "Test Field", '\\d+');
-            return $i->html();
+
+        }
+        
+        // add a new Input to this form
+        public function addInput($input) {
+            $this->inputs[] = $input;
+        }
+        
+        public function updateTable($table) {
+                       
+        }
+        
+        public function printBody() {
+            foreach($this->inputs as $i) {
+                print($i->html() . "<br />");
+            }
         }
         
     }
