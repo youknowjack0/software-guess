@@ -1,5 +1,41 @@
 @CHARSET "ISO-8859-1";
-.accessCode {
+#AccessCode, .accessCode {
 	font-size: large;
 	color: #FF0000;
+}
+
+.help {
+	border-style: solid;
+	border-color: #009;
+	border-width: 1px;
+	margin: 3px;
+	padding: 5px;
+	color: navy;
+}
+
+label {
+	display: inline-block;
+	width: 200px;
+}
+
+input {
+	margin: 3px;
+}
+
+.inputspace {
+	display: inline-block;
+	width: 300px;
+}
+
+.formitem {
+	display: block;
+	width: auto;
+	border-style: solid;
+	border-color: #BBB;
+	background-color: #FFD;
+	border-width: 1px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	margin: 3px;
+	padding: 3px;
 }

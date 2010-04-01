@@ -83,20 +83,22 @@ class Input {
         $this->shortHelp = $helptext;
     }
      
+    //in this parent function, use %s as placeholder for child input fields
     function html() {
-        $return = "";
+        $return = '<div class="formitem">%s';
         // prints the documentation & necessary newlines
         if(isset($this->shortHelp)) {
-            $return .= sprintf(' [<a href="#" onclick="javascript:document.getElementById(\'%s\').style.visibility=\'visible\';document.getElementById(\'%s\').style.display=\'block\';">quick help+</a>]', $this->name . "_help", $this->name . "_help");
+            $return .= sprintf(' <a href="#" onclick="javascript:toggleVisibility(\'%s\');">[?]</a>', $this->name . "_help");
         }
         if(isset($this->helpLink)) {
             $return .= sprintf(' [<a href="%s">documentation</a>]', $this->helpLink);
         }
         
-        print("<br />");
+        //print("<br />");
         if(isset($this->shortHelp)) {
-            $return .= sprintf('<div class="help" style="visibility:hidden;display:none;" id="%s_help">%s [<a href="#" onclick="javascript:document.getElementById(\'%s\').style.visibility=\'hidden\';document.getElementById(\'%s\').style.display=\'none\';">hide</a>]</div>', $this->name, $this->shortHelp,$this->name . "_help",$this->name . "_help");
+            $return .= sprintf('<div class="help" style="visibility:hidden;display:none;" id="%s_help">%s</div>', $this->name, $this->shortHelp);
         }
+        $return .= '</div>';
         return $return;
     }
     
@@ -106,7 +108,7 @@ class Input {
         if($this->validate != "") {
 	        $matches = array();
 	        preg_match('/'.$this->validate.'/', $this->value, $matches);
-	        if(!($matches[0] == $this->value)) {
+	        if(!isset($matches[0]) || !($matches[0] == $this->value)) {
 	            $this->errormessage = sprintf('Input "%s" in field "%s" is not valid: it does not match regex "%s"', $this->value, $this->label, $this->validate);
 	            return false;
 	        }
@@ -152,17 +154,18 @@ class InputText extends Input {
     }
 
     function html() {
-        return sprintf('<label for="%s"%s>%s </label><input name="%s" id="%s" type="text" value="%s"%s%s />',
+        $str = sprintf('<label for="%s"%s>%s </label><div class="inputspace"><input name="%s" id="%s" type="text" value="%s"%s%s /></div>',
         $this->column, // field name
         (isset($this->labelClass) ? sprintf(' class="%s"',$this->labelClass) : ""), // label class
         $this->label, //label text
         $this->column, //field name
         $this->column, //field id
         $this->value, //field value
-        ($this->locked ? ' readonly="readonly"' : ""), //islocked
-        (isset($this->class) ? sprintf(' class="%s"',$this->class) : "")) // input class
-         .
-        parent::html();
+        ($this->locked ? ' readonly="readonly" class="lockedinput"' : ""), //islocked
+        (isset($this->class) ? sprintf(' class="%s"',$this->class) : "")); // input class
+
+        // the html function in the root class leaves a %s for fields based on it
+        return sprintf(parent::html(), $str);
     }
 
 }
@@ -179,6 +182,10 @@ class HTML extends Input {
     
     function html() {
         return $this->code;
+    }
+    
+    function isValid() {
+        return true;
     }
 
 }

@@ -40,11 +40,8 @@
 	color: red;
 }
 
-.help {
-	border-style: solid;
-	border-color: #009;
-	border-width: 1px;
-	margin: 3px;
-	padding: 5px;
-	color: navy;
+
+
+.lockedinput {
+	background-color: #DDD;	
 }

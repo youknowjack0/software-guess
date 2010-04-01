@@ -48,16 +48,20 @@ $Author: youknowjack@gmail.com $
         var $inputs = array();
         var $req;
         var $errormessage;
+        var $name;
+        var $isResult;
         
-        public function __construct($type, $method, $currentfile) {
+        public function __construct($type, $method, $currentfile, $name="f1") {
             $this->type = $type;
             $this->method = $method;
             $this->currentfile = $currentfile;
+            $this->name = $name;
+            $this->isResult = false;
         }
         
         // has the user filled out the form
         public function isResult() {
-        
+            return $this->isResult;
         }
         
         // name indexed associative array?
@@ -84,8 +88,25 @@ $Author: youknowjack@gmail.com $
             }
         }
         
+        public function printHeader() {
+            printf('<form method="%s" action="%s">', $this->method, $this->currentfile);
+        }
+        
+        public function printFooter() {
+            printf('<input type="submit" value="Submit" name="%s_submit"', $this->name);
+            print('</form>');
+        }
+        
         public function setRequest($req) {
             $this->req = $req;
+            if(isset($req[sprintf("%s_submit", $this->name)])) {
+                $this->isResult = true;                
+                foreach ($this->inputs as $i) {
+                    if(isset($req[$i->name])) {                        
+                        $i->value = $req[$i->name];
+                    }
+                }
+            }
         }
         
         public function isValid() {

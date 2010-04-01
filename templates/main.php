@@ -39,6 +39,7 @@ $HeadURL: https://software-guess.googlecode.com/svn/trunk/index.php $
 <title>GUESS: <?php echo $header_title ?></title>
 <?php if(isset($header_extra)) {echo $header_extra;} ?>
 <link rel="stylesheet" href="static/shared.css" type="text/css" />
+<script language="javascript" src="static/shared.js"></script>
 </head>
 <body <?php if (isset($header_bodytag_extra)) {echo $header_bodytag_extra;} ?>>
 <a href="index.php"><h1>GUESS</h1></a>
@@ -46,6 +47,7 @@ $HeadURL: https://software-guess.googlecode.com/svn/trunk/index.php $
 Todo: formatting etc.. here
 <hr />
 <?php if(isset($template_error) && $template_error != "") { ?><div class="error"><?php echo $template_error; ?></div><?php } ?>
+<noscript><div class="error">Javascript is required to use most of this software.</div></noscript>
 <?php echo $template_body; ?>
 <hr />
 Todo: copyright notice etc.. here
