@@ -35,29 +35,40 @@ $Author: youknowjack@gmail.com $
 ob_start();
 
 // Create instance of InputForm class
-require 'templates/inputform.php';
+require 'components/inputform.php';
 
 $form = new InputForm(-1, "GET", "new.php");
+$form->setRequest($_REQUEST); //note this must be set before adding inputs
 
 // public estimate identifier code
 // TODO: check identifiers in the database before using
 $ident = strtoupper(base_convert(mt_rand(100000,999999999999), 10, 36));
-$input = new InputText("AccessCode", "AccessCode", "Access Code", "[0-9a-zA-Z]+", $ident, $minlen=-1, $maxlen=-1, true);
+$input = new InputText("AccessCode", "AccessCode", "Access Code", "[0-9a-zA-Z]{3,69}", $ident, $minlen=-1, $maxlen=-1, true);
 $input->setInputClass("accessCode");
 $input->setLabelClass("accessCode");
+$input->setHelp("This access code is the only way to access your saved estimate (please write it down). The code also serves as a unique identifier for this estimate.");
 $form->addInput($input);
-$input = new HTML("The above code is the only way to access your saved estimate (please write it down). <br />");
+$input = new InputText("ProjectName", "ProjectName", "Project Name", "[a-zA-Z0-9\-' _]+", "Stephen'~aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaas Mega Project-X", 3, 64);
+$input->setHelp("This is the name of your projet. You can change this at a later time; it is for your personal identification purposes only");
+$form->addInput($input);
+$input = new InputText("ProjectName2", "ProjectName2", "Project Name", "[a-zA-Z0-9\-' _]+", "Stephen'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaas Mega Project-X", 3, 64);
+$input->setHelp("This is the name of your projet. You can change this at a later time; it is for your personal identification purposes only");
 $form->addInput($input);
 
 
 // if the user has submitted the form, handle the result
-if ($form->isResult()) {
-    $form->updateTable("tablenamexxx");
+if (1==1) {    //$form->isResult()) {
+    if ($form->isValid()) {
+        // update table & forward
+    } else {
+        // print error, show form again
+        $template_error = $form->getError();
+    }
 }
 
 // Header file to show title, load styles, etc...
 $header_title = "New Estimate";
-$header_extra = '<link rel="stylesheet" href="static/forms.css" type="text/css">';
+$header_extra = '<link rel="stylesheet" href="static/forms.css" type="text/css" />';
 
 // print form
 $form->printBody();
