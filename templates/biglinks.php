@@ -25,16 +25,13 @@ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
 ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT 
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
-?>
-<!--
+
 FILE INFO: biglinks.php
 $LastChangedDate: 2010-03-25 17:48:06 +0800 (Thu, 25 Mar 2010) $
 $Revision: 3 $
 $Author: youknowjack@gmail.com $
--->
-<?php
 
+*/
     // this file expects $biglinks_items passed to it as an nested array of
     //  items
     // structure:
