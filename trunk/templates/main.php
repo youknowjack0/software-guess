@@ -42,15 +42,29 @@ $HeadURL: https://software-guess.googlecode.com/svn/trunk/index.php $
 <script language="javascript" src="static/shared.js"></script>
 </head>
 <body <?php if (isset($header_bodytag_extra)) {echo $header_bodytag_extra;} ?>>
-<a href="index.php"><h1>GUESS</h1></a>
-<h2><?php echo $header_title ?></h2>
-Todo: formatting etc.. here
-<hr />
-<?php if(isset($template_error) && $template_error != "") { ?><div class="error"><?php echo $template_error; ?></div><?php } ?>
-<?php if(isset($template_success) && $template_success != "") { ?><div class="success"><?php echo $template_success; ?></div><?php } ?>
-<noscript><div class="error">Javascript is required to use most of this software.</div></noscript>
-<?php echo $template_body; ?>
-<hr />
-Todo: copyright notice etc.. here
+	<div id="bigboy">
+		<div id="topdiv">
+			<a href="index.php"><img style="border:none;" src="static/GUESStitle.png" alt="G.U.E.S.S." /></a>
+		</div>
+		<div id="topright">
+			<img src="static/GUESSfull.png" />
+		</div>
+		<?php if(isset($template_headerspace)) { 
+		    echo $template_headerspace;
+		} else {
+			printf("<h2>%s</h2>", $header_title);
+		} 
+		?>	
+		<hr />
+		<?php if(isset($template_error) && $template_error != "") { ?><div class="error"><?php echo $template_error; ?></div><?php } ?>
+		<?php if(isset($template_success) && $template_success != "") { ?><div class="success"><?php echo $template_success; ?></div><?php } ?>
+		<noscript><div class="error">Javascript is required to use most of this software.</div></noscript>
+		<?php echo $template_body; ?>
+		<hr />
+		<div style="text-align:center;font-size:small;">
+			&copy; 2010 Jack Langman, Daniel Fozdar, Nelson Yiap, Zhihua Guo, Vivek Koul & Aaron Taylor. All rights reserved. <br/>
+			Icons used with permission under the GPL license, <a href="copyrightimages/license.txt">read here</a>.
+		</div>
+	</div>
 </body>
 </html>
