@@ -34,6 +34,10 @@ $Author: youknowjack@gmail.com $
 
 ob_start();
 
+//load DB vars
+require 'components/db.php';
+require 'components/utility.php';
+
 // Create instance of InputForm class
 require 'components/inputform.php';
 
@@ -41,27 +45,48 @@ $form = new InputForm(-1, "GET", "new.php");
 
 // public estimate identifier code
 // TODO: check identifiers in the database before using
+$input = array();
 $ident = strtoupper(base_convert(mt_rand(100000,999999999999), 10, 36));
-$input = new InputText("AccessCode", "AccessCode", "Access Code", "[0-9a-zA-Z]{3,69}", $ident, $minlen=-1, $maxlen=-1, true);
-$input->setLabelClass("accessCode");
-$input->setHelp("This access code is the only way to access your saved estimate (please write it down). The code also serves as a unique identifier for this estimate. You cannot change this value.");
-$form->addInput($input);
-$input = new InputText("ProjectName", "ProjectName", "Project Name", "[a-zA-Z0-9\-' _]*", "", 3, 64);
-$input->setHelp("This is the name of your project. You can change this at a later time; it is for identification purposes only");
-$form->addInput($input);
-$input = new InputText("ProjectOwner", "ProjectOwner", "Project Owner", "[a-zA-Z\-' ]*", "", 3, 48);
-$input->setHelp("This is the name of the project owner (e.g. the project manager). You can change this at a later time; it is for identification purposes only");
-$form->addInput($input);
-$input = new InputText("LastIteration", "LastIteration", "Estimate Version", "[0-9]+", 0, -1, -1, true);
-$input->setHelp("this is the estimate version - it always begins at zero. This number will be iterated automatically as the estimate is revised. You cannot change this number manually.");
-$form->addInput($input);
+$input["AccessCode"] = new InputText("AccessCode", "AccessCode", "Access Code", "[0-9a-zA-Z]{3,69}", $ident, -1, -1, 3, 69, true);
+$input["AccessCode"]->setLabelClass("accessCode");
+$input["AccessCode"]->setHelp("This access code is the only way to access your saved estimate (please write it down). The code also serves as a unique identifier for this estimate. You cannot change this value.");
 
+$input["ProjectName"] = new InputText("ProjectName", "ProjectName", "Project Name", "[a-zA-Z0-9\-' _]*", "", -1,-1, 3, 64);
+$input["ProjectName"]->setHelp("This is the name of your project. You can change this at a later time; it is for identification purposes only");
+
+$input["ProjectOwner"] = new InputText("ProjectOwner", "ProjectOwner", "Project Owner", "[a-zA-Z\-' ]*", "", -1, -1, 3, 48);
+$input["ProjectOwner"]->setHelp("This is the name of the project owner (e.g. the project manager). You can change this at a later time; it is for identification purposes only");
+
+$input["Organisation"] = new InputText("Organisation", "Organisation", "Organisation", "[a-zA-Z0-0\-' ]*", "", -1, -1, 0, 64);
+$input["Organisation"]->setHelp("This is the name of the organisation associated with this project. This field can be left blank. You can change this at a later time; it is for identification purposes only");
+
+$input["Phase"] = new InputRadio("Phase", "Phase", "Project Phase", "[0-9]+", 0, 0, 5, 1, 1);
+$input["Phase"]->setHelp("This reflects the current phase of the project. Unless the project has started, leave this as default. This value affects confidence intervals for estimates generated.");
+$input["Phase"]->add(0, "No Work Undertaken");
+$input["Phase"]->add(1, "Requirements Analysis Complete");
+$input["Phase"]->add(2, "Design Complete");
+$input["Phase"]->add(3, "Alpha Release");
+$input["Phase"]->add(4, "Beta Release");
+$input["Phase"]->add(5, "Final Release");
+
+$input["LastIteration"] = new InputText("LastIteration", "LastIteration", "Estimate Version", "[0-9]+", 0, 0, 32000, -1, -1, true);
+$input["LastIteration"]->setHelp("this is the estimate version - it always begins at zero. This number will be iterated automatically as the estimate is revised. You cannot change this number manually.");
+
+foreach($input as $i) {
+    $form->addInput($i);
+}
 
 // if the user has submitted the form, handle the result
 $form->setRequest($_REQUEST);
 if ($form->isResult()) {
-    if ($form->isValid()) {
+    if ($form->isValid()) {        
         // update table & forward
+        if(mysql_query(buildInsertQuery($input, "Estimates"))) {
+            header("Location: edit.php");
+            exit;
+        } else {
+            $template_error = "MySQL threw an error: " . mysql_error();
+        }
     } else {
         // print error, show form again
         $template_error = $form->getError();
