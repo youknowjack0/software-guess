@@ -1,5 +1,13 @@
 @CHARSET "ISO-8859-1";
 
+/* color palette */
+/* C7E314 
+   5FE314
+   14E330
+   E39814
+   E33014
+*/
+
 /* biglinks.php */
 
 #biglinks_buttons {
@@ -29,18 +37,34 @@
 	border: none;
 }
 
-.error {
+.error, .success {
 	display: block;
-	border-style: solid;
-	border-color: #900;
+	border-style: solid;	
 	border-width: 3px;
 	margin: 5px;
 	padding: 10px;
 	text-align: center;
+}
+
+.error {
+	border-color: #900;
 	color: red;
 }
 
+.success {
+	border-color: #090;
+	color: #090;
+}
 
+
+input {
+	margin: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-style: solid;
+	border-color: #C7E314;
+	border-width: 2px;
+}
 
 .lockedinput {
 	background-color: #DDD;	

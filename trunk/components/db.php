@@ -1,5 +1,3 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<!-- COPYRIGHT NOTICE: Please see copyright.txt  -->
 <?php /*
 Copyright (c) 2010 Jack Langman, Daniel Fozdar, Nelson Yiap, Zhihua Guo,
 Vivek Koul & Aaron Taylor
@@ -28,29 +26,22 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-FILE INFO: templates/main.php
+FILE INFO: components/db.php
 $LastChangedDate: 2010-03-25 17:48:06 +0800 (Thu, 25 Mar 2010) $
 $Revision: 3 $
 $Author: youknowjack@gmail.com $
 $HeadURL: https://software-guess.googlecode.com/svn/trunk/index.php $
-*/ ?>
-<html>
-<head>
-<title>GUESS: <?php echo $header_title ?></title>
-<?php if(isset($header_extra)) {echo $header_extra;} ?>
-<link rel="stylesheet" href="static/shared.css" type="text/css" />
-<script language="javascript" src="static/shared.js"></script>
-</head>
-<body <?php if (isset($header_bodytag_extra)) {echo $header_bodytag_extra;} ?>>
-<a href="index.php"><h1>GUESS</h1></a>
-<h2><?php echo $header_title ?></h2>
-Todo: formatting etc.. here
-<hr />
-<?php if(isset($template_error) && $template_error != "") { ?><div class="error"><?php echo $template_error; ?></div><?php } ?>
-<?php if(isset($template_success) && $template_success != "") { ?><div class="success"><?php echo $template_success; ?></div><?php } ?>
-<noscript><div class="error">Javascript is required to use most of this software.</div></noscript>
-<?php echo $template_body; ?>
-<hr />
-Todo: copyright notice etc.. here
-</body>
-</html>
+*/
+
+$db_host = "localhost";
+$db_username = "root";
+$db_password = "getout";
+$db_name = "GUESS";
+
+$db = mysql_connect($db_host, $db_username, $db_password);
+if (!$db) {
+    die('Fatal error! Could not connect: ' . mysql_error());
+}
+$db = mysql_select_db($db_name, $db);
+
+?>

@@ -15,12 +15,10 @@
 
 label {
 	display: inline-block;
-	width: 200px;
+	width: 250px;
 }
 
-input {
-	margin: 3px;
-}
+
 
 .inputspace {
 	display: inline-block;

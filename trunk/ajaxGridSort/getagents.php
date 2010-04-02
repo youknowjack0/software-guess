@@ -14,33 +14,26 @@
 // +------------------------------------------------------------------------+
 // 
 // Modified by Jack Langman
+
+require 'components/db.php';
+
 class clsAJAX
 {
-    public $dbhost;
-    public $dbuname;
-    public $dbpass;
-    public $dbname;
-
     private $numFields;
     private $arrTable;
     public $arrFields;
     private $filename;
+    var $db;
     
-    public function __construct($ags_numFields,$ags_arrFields, $ags_filename, $ags_table)
+    public function __construct($ags_numFields,$ags_arrFields, $ags_filename, $ags_table, $db)
     {
-        $dbhost = "localhost";
-        $dbuname = "root";
-        $dbpass = "getout";
-        $dbname = "GUESS";
-
+    
         $this->numFields = $ags_numFields;
         $this->arrFields = $ags_arrFields;
         $this->filename = $ags_filename;
         $this->arrTable = $ags_table;
-        
-        $db = mysql_connect($dbhost, $dbuname, $dbpass);
-        if (!$db) {  die('There was a problem with the database, please try back later'); }
-        mysql_select_db($dbname, $db);
+
+        $this->db = $db;
     }
 
     public function showList($id='')
@@ -183,7 +176,7 @@ class clsAJAX
     }
 }
 
-$obj = new clsAJAX($ags_numFields,$ags_arrFields, $ags_filename, $ags_table);
+$obj = new clsAJAX($ags_numFields,$ags_arrFields, $ags_filename, $ags_table, $db);
 
 if ( $_REQUEST['mode'] == "delete" )
 {

@@ -32,6 +32,8 @@ $Revision: 3 $
 $Author: youknowjack@gmail.com $
 */
 
+//TODO: star required items
+
 // class to represent a generic input
 
 class Input {
@@ -87,9 +89,7 @@ class Input {
     function html() {
         $return = '<div class="formitem">%s';
         // prints the documentation & necessary newlines
-        if(isset($this->shortHelp)) {
-            $return .= sprintf(' <a href="#" onclick="javascript:toggleVisibility(\'%s\');">[?]</a>', $this->name . "_help");
-        }
+
         if(isset($this->helpLink)) {
             $return .= sprintf(' [<a href="%s">documentation</a>]', $this->helpLink);
         }
@@ -102,6 +102,13 @@ class Input {
         return $return;
     }
     
+    function getHelpButton() {
+        if(isset($this->shortHelp)) {
+            return sprintf(' <a href="#" onclick="javascript:toggleVisibility(\'%s\');">[?]</a>', $this->name . "_help");
+        }
+        return "";
+    }
+    
     function isValid() {
         $this->errormessage = "";
         // test against regex
@@ -109,32 +116,32 @@ class Input {
 	        $matches = array();
 	        preg_match('/'.$this->validate.'/', $this->value, $matches);
 	        if(!isset($matches[0]) || !($matches[0] == $this->value)) {
-	            $this->errormessage = sprintf('Input "%s" in field "%s" is not valid: it does not match regex "%s"', $this->value, $this->label, $this->validate);
+	            $this->errormessage = sprintf('Input "%s" in field "%s" is not valid: it does not match regex "%s"', htmlspecialchars($this->value), $this->label, $this->validate);
 	            return false;
 	        }
         }
         //test for length
         if($this->min != -1) { // todo: check for float/int binary representation issues
             if(floatval($this->value) < $this->min) {
-                $this->errormessage = sprintf('Input "%s" in field "%s" is not valid: it is less than the minimum of %s"', $this->value, $this->label, $this->min);
+                $this->errormessage = sprintf('Input "%s" in field "%s" is not valid: it is less than the minimum of %s"', htmlspecialchars($this->value), $this->label, $this->min);
                 return false;
             }
         }
         if($this->max != -1) { // todo: check for float/int binary representation issues
             if(floatval($this->value) > $this->max) {
-                $this->errormessage = sprintf('Input "%s" in field "%s" is not valid: it is greater than the maximum of %s"', $this->value, $this->label, $this->max);
+                $this->errormessage = sprintf('Input "%s" in field "%s" is not valid: it is greater than the maximum of %s"', htmlspecialchars($this->value), $this->label, $this->max);
                 return false;
             }
         }
         if($this->minlen != -1) {
             if(strlen($this->value) < $this->minlen) {
-                $this->errormessage = sprintf('Input "%s" (%s chars) in field "%s" is not valid: it is shorter than the minimum length of %s"', $this->value, strlen($this->value), $this->label, $this->minlen);
+                $this->errormessage = sprintf('Input "%s" (%s chars) in field "%s" is not valid: it is shorter than the minimum length of %s"', htmlspecialchars($this->value), strlen($this->value), $this->label, $this->minlen);
                 return false;
             }
         }
         if($this->maxlen != -1) {
             if(strlen($this->value) > $this->maxlen) {
-                $this->errormessage = sprintf('Input "%s" (%s chars) in field "%s" is not valid: it is longer than the maximum length of %s"', $this->value, strlen($this->value), $this->label, $this->maxlen);
+                $this->errormessage = sprintf('Input "%s" (%s chars) in field "%s" is not valid: it is longer than the maximum length of %s"', htmlspecialchars($this->value), strlen($this->value), $this->label, $this->maxlen);
                 return false;
             }
         }
@@ -149,26 +156,54 @@ class Input {
 
 class InputText extends Input {
 
-    function __construct($name, $column, $label, $validate='', $default='', $minlen=-1, $maxlen=-1, $locked=false) {
-        parent::__construct($name, $column, $label, $validate, $default, -1, -1, $minlen, $maxlen, $locked);
+    function __construct($name, $column, $label, $validate='', $default='', $min=-1, $max=-1, $minlen=-1, $maxlen=-1, $locked=false) {
+        parent::__construct($name, $column, $label, $validate, $default, $min, $max, $minlen, $maxlen, $locked);
     }
 
     function html() {
-        $str = sprintf('<label for="%s"%s>%s </label><div class="inputspace"><input name="%s" id="%s" type="text" value="%s"%s%s /></div>',
+        $str = sprintf('<label for="%s"%s>%s%s </label><div class="inputspace"><input name="%s" id="%s" type="text" value="%s"%s%s%s /></div>',
         $this->column, // field name
         (isset($this->labelClass) ? sprintf(' class="%s"',$this->labelClass) : ""), // label class
         $this->label, //label text
+        $this->getHelpButton(), // help button
         $this->column, //field name
         $this->column, //field id
-        $this->value, //field value
+        htmlspecialchars($this->value), //field value
         ($this->locked ? ' readonly="readonly" class="lockedinput"' : ""), //islocked
-        (isset($this->class) ? sprintf(' class="%s"',$this->class) : "")); // input class
+        (isset($this->class) ? sprintf(' class="%s"',$this->class) : ""),
+        $this->maxlen!=-1 ? sprintf(' maxlength="%s"',$this->maxlen) : ""); // input class
 
         // the html function in the root class leaves a %s for fields based on it
         return sprintf(parent::html(), $str);
     }
 
 }
+
+class InputRadio extends Input {
+
+    var $items = array();
+    
+    function __construct($name, $column, $label, $validate='', $default='', $min=-1, $max=-1, $minlen=-1, $maxlen=-1, $locked=false) {
+        parent::__construct($name, $column, $label, $validate, $default, $min, $max, $minlen, $maxlen, $locked);
+    }
+
+    function html() {
+        $str = sprintf("<label>%s%s</label><br />", $this->label, $this->getHelpButton());
+        foreach($this->items as $k => $v) {
+            $str .= sprintf('<label> </label><label><input name="%s" type="radio" value="%s"%s /> %s</label><br />', $this->name, htmlspecialchars($v), ($v == $this->value ?  ' checked="checked"' : ""), $k);
+        }
+
+        // the html function in the root class leaves a %s for fields based on it
+        return sprintf(parent::html(), $str);
+    }
+    
+    // add an item to the list
+    function add($val, $string) {
+        $this->items[$string] = $val;    
+    }
+
+}
+
 
 // use this to print some plain code as part of a form
 // does not behave like a normal input/output
