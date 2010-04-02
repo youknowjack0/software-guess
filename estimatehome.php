@@ -26,33 +26,47 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-FILE INFO: index.php
-$LastChangedDate$
-$Revision$
-$Author$
+FILE INFO: estimatehome.php
+$LastChangedDate: 2010-04-01 16:10:29 +0800 (Thu, 01 Apr 2010) $
+$Revision: 14 $
+$Author: youknowjack@gmail.com $
 */
 ob_start();
-$header_title = "Home";
+require 'components/db.php';
 
-// This file just creates a launcher page with some buttons to do various
-// stuff. It achieves this by setting some variables which are passed to the
-// template file: "biglinks.php"
-//
-// The $biglinks_items var is passed to the biglinks file. Each nested array
-// represents 1 button/link. The "type" field determines how the button/link
-// is displayed. The "file" field determines which page is called to handle
-// the user when the button/input is pressed/submitted.
-$biglinks_items = array(
+// this file accepts url parameter: "code"
+$valid = true;
 
-array("name" => "New Estimate", "file" => "new.php", "image" => "copyrightimages/pencil.png", "type" => "button"), //todo: create images
-array("name" => "Existing Estimate", "file" => "estimatehome.php", "image" => "copyrightimages/load.png", "type" => "input"),
-array("name" => "Calibrate", "file" => "calibrate.php", "image" => "copyrightimages/tools.png", "type" => "button")
-);
-require 'components/biglinks.php';
+if (!isset($_GET["code"])) {
+    $valid = false;
+} else {
+    $code = $_GET["code"];
+    $sql = sprintf("SELECT * FROM estimates WHERE AccessCode = '%s'", addslashes($code));
+    if(!$result = mysql_query($sql)) {
+        $valid = false;
+    }
+}
 
+if ($valid && mysql_num_rows($result)==1) {
 
-// Footer file to show some copyright info etc...
+    //show links across the top; 'start estimating', 'reports' & 'change history'
+    $row = mysql_fetch_assoc($result);
+    $header_title = sprintf("Estimate Home (%s)", $row["AccessCode"]);
+    $biglinks_items = array(
+        array("name" => "Start Estimating", "file" => "estimate.php?s=0&code=".$code, "image" => "copyrightimages/pencil.png", "type" => "button"),
+        array("name" => "Reports", "file" => "reportsindex.php", "image" => "copyrightimages/reports.png", "type" => "button", "disabled" => ($row["LastIteration"]>0?false:true)),
+        array("name" => "Change History", "file" => "edit.php", "image" => "copyrightimages/cert.png", "type" => "button", "disabled" => ($row["LastIteration"]>0?false:true))
+    );
+    require 'components/biglinks.php';
+    echo "<hr />";
+    echo "<h3>View/Edit Estimate Details</h3>";
+    
+
+} else {
+    $header_title = "Estimate Home";
+    $template_error = "An error occured (perhaps the Access Code is invalid?) " . mysql_error();
+}
+
 $template_body = ob_get_clean();
 require 'templates/main.php';
-
 ?>

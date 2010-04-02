@@ -58,13 +58,15 @@ $Author: youknowjack@gmail.com $
     
     echo "<div id=\"biglinks_buttons\">";
     foreach ($biglinks_items as $item) {
-        echo "<div class=\"biglinks_button\">";
-        if ($item["type"] == "button") {
+        printf("<div class=\"biglinks_button%s\">", isset($item["disabled"]) && $item["disabled"] == true ? " biglinks_disabled" : "");
+        if ($item["type"] == "button" && isset($item["disabled"]) && $item["disabled"] == true) {
+            printf('<img src="%s" alt="Not Yet Available" class="biglinks_image"/><br />%s</a>', $item["image"], $item["name"]);
+        } elseif ($item["type"] == "button") {
             printf('<a href="%s"><img src="%s" class="biglinks_image" alt="%s" /><br />%s</a>', $item["file"], $item["image"], $item["name"], $item["name"]);
         } elseif ($item["type"] == "input") {
             printf('<form method="GET" action="%s" >', $item["file"]);
             printf('<img src="%s" class="biglinks_image" alt="%s" /><br />%s<br />', $item["image"], $item["name"], $item["name"]);
-            echo '<input type="text" name="input" />';
+            echo '<input type="text" name="code" size="6" />';
             echo '<input type="submit" name="submit" value="Go" />';
             echo '</form>';
         }        
