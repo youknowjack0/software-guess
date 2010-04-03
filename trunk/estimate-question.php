@@ -26,35 +26,8 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-FILE INFO: estimatehome.php
-$LastChangedDate: 2010-04-01 16:10:29 +0800 (Thu, 01 Apr 2010) $
-$Revision: 14 $
+FILE INFO: estimate-question.php
+$LastChangedDate: 2010-03-25 17:48:06 +0800 (Thu, 25 Mar 2010) $
+$Revision: 3 $
 $Author: youknowjack@gmail.com $
 */
-ob_start();
-require 'components/db.php';
-require 'components/utility.php';
-
-if ($result = validateEstimateCode($_GET)) {
-
-    //show links across the top; 'start estimating', 'reports' & 'change history'
-    $row = mysql_fetch_assoc($result);
-    $header_title = sprintf("Estimate Home (%s)", $row["AccessCode"]);
-    $biglinks_items = array(
-        array("name" => "Start Estimating", "file" => "estimate.php?estimate=".$_GET["code"], "image" => "copyrightimages/pencil.png", "type" => "button"),
-        array("name" => "Reports", "file" => "reportsindex.php", "image" => "copyrightimages/reports.png", "type" => "button", "disabled" => ($row["LastIteration"]>0?false:true)),
-        array("name" => "Change History", "file" => "edit.php", "image" => "copyrightimages/cert.png", "type" => "button", "disabled" => ($row["LastIteration"]>0?false:true))
-    );
-    require 'components/biglinks.php';
-    echo "<hr />";
-    echo "<h3>View/Edit Estimate Details</h3>";
-    
-
-} else {
-    $header_title = "Estimate Home";
-    $template_error = "An error occured (perhaps the Access Code is invalid?) " . mysql_error();
-}
-
-$template_body = ob_get_clean();
-require 'templates/main.php';
-?>
