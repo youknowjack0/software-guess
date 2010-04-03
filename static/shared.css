@@ -14,6 +14,11 @@
 	
 }
 
+.code {
+	font-family: monospace;
+	font-weight: bold;
+}
+
 body {
 	background-color: #EEE;
 	font-family: sans-serif;

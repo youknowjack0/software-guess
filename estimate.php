@@ -39,12 +39,36 @@ require 'components/utility.php';
 if ($result = validateEstimateCode($_GET, "estimate")) {
     $header_title = sprintf("Estimate (%s)", $_GET["estimate"]);
     $row = mysql_fetch_assoc($result);
-    $questions = Question::getAllQuestions("XXX", $row["LastIteration"]+1);
+    $version = $row["LastIteration"]+1;
+    $questions = Question::getAllQuestions("XXX", $version);
     
-    //print a list of questions
+    //$lastq = $row["LastQuestionAnswered"];
+    
+    //print a list of questions TODO: images
+    $outofdatestr = " [out of date]";
+    $notansweredstr = " [not answered]";
+    $answeredstr = " [answered]";
+    $locked = true;
+    
+    //$currentstr = " [current]"
     printf("<ol>");
+    
     foreach($questions as $k => $v) {
-        printf("<li>%s</li>", $v->name);
+        if(!$v->canAnswer()) {
+            $lockedstr = sprintf(" [locked! condition: <span class=\"code\">%s</span>]", $v->conditions);
+            $regex = '/(\\$Q\\["|\\$Q\[\')([a-zA-Z0-9_]+)("\]|\'\])/';
+            //printf($regex); //debug            
+            $lockedstr = preg_replace($regex, sprintf('<a href="estimate-question.php?estimate=%s&question=%s">$2</a>', $_GET["estimate"], $v->code) , $lockedstr); //replace $Q["CODE"]/$Q['CODE'] with a link
+            //TODO: don't show a link if the target is locked            
+        } else {
+            $locked = false;
+            $lockedstr = "";
+        }
+        if(!$locked) {
+            printf('<li><a href="#">%s</a>%s%s%s</li>', $v->name, ($v->hasValue()?$answeredstr:$notansweredstr), ($v->isUpToDate($version)?"":$outofdatestr), $lockedstr );
+        } else {
+            printf('<li>%s%s%s%s</li>', $v->name, ($v->hasValue()?$answeredstr:$notansweredstr), ($v->isUpToDate($version)?"":$outofdatestr), $lockedstr);
+        }
     }
     printf("</ol>");
 } else {

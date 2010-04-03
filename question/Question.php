@@ -49,6 +49,7 @@ class Question {
     var $minlen;
     var $maxlen;
     var $order;
+    var $Q;
     
     /*      
      * guaranteed to be ordered by 'order' ascending
@@ -80,7 +81,7 @@ class Question {
             $qObj->max = $question["Max"];
             $qObj->minlen = $question["MinLen"];
             $qObj->maxlen = $question["MaxLen"];
-            $qObj->order = $question["Order"];            
+            $qObj->order = $question["Order"];
             
             if($result2) {
                 while($response = mysql_fetch_assoc($result2)) {
@@ -99,7 +100,12 @@ class Question {
                 $Q[$question['Code']] = $val;
                 $qObj->value[$response["Version"]] = $val;
             }
-            $questions[$qObj->code]=$qObj;        
+            
+            //TODO: is there a better way to do this line?
+            $qObj->Q &= $Q;
+            
+            $questions[$qObj->code]=$qObj;
+                    
         }
         return $questions;        
     }
@@ -114,7 +120,36 @@ class Question {
      * false otherwise
      */
     function canAnswer() {
-        
+        $Q = $this->Q;
+        eval("\$ISNGOISUGNOI=".$this->conditions.";");
+        return $ISNGOISUGNOI;
+    }
+    
+    //TODO: cleanup
+    function isUpToDate($latest) {
+        if($latest==1) {
+            return true;
+        }
+        if(!isset($this->value)) {
+            return false;
+        }
+        $ver;
+        foreach($this->value as $k => $v) {
+            $ver = $k;
+        }
+        if(!isset($ver)) {
+            if ($latest == 1) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            if ($ver == $latest) {
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
     
     /* gets the most recent value
@@ -122,7 +157,7 @@ class Question {
      */
     function getLatestValue() {
         $val;
-        foreach($value as $v) {
+        foreach($this->value as $v) {
             $val = $v;
         }
         if(!isset($val)) {
@@ -130,6 +165,13 @@ class Question {
         } else {
             return $val;
         }
+    }
+    
+    function hasValue() {
+        if(isset($this->value)) {
+            return true;
+        }
+        return false;
     }
 
 }
