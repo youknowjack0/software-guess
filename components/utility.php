@@ -48,4 +48,25 @@ function buildInsertQuery($inputs, $table) {
     return $sql;	
 }
 
+/* if valid returns the mysql result, else false */
+function validateEstimateCode($req, $field = 'code') {
+
+	if (!isset($req[$field])) {
+	    return false;
+	} else {
+	    $code = $_GET[$field];
+	    $sql = sprintf("SELECT * FROM estimates WHERE AccessCode = '%s'", addslashes($code));
+	    if(!$result = mysql_query($sql)) {
+	        return false;
+	    }
+	}
+	
+	if (mysql_num_rows($result) == 1) {
+	    return $result;
+	} else {
+	    return false;
+	}
+}
+
+
 ?>
