@@ -77,12 +77,13 @@ foreach($input as $i) {
 }
 
 // if the user has submitted the form, handle the result
+$form->setButtons();
 $form->setRequest($_REQUEST);
 if ($form->isResult()) {
     if ($form->isValid()) {        
         // update table & forward
         if(mysql_query(buildInsertQuery($input, "Estimates"))) {
-            header("Location: edit.php");
+            header("Location: estimatehome.php?code=".$input["AccessCode"]->getValue());
             exit;
         } else {
             $template_error = "MySQL threw an error: " . mysql_error();

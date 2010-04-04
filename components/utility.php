@@ -68,5 +68,26 @@ function validateEstimateCode($req, $field = 'code') {
 	}
 }
 
+/* if valid returns the mysql result, else false */
+function validateQuestionCode($req, $field = 'question') {
+
+	if (!isset($req[$field])) {
+	    return false;
+	} else {
+	    $code = $_GET[$field];
+	    $sql = sprintf("SELECT * FROM Questions WHERE `Code` = '%s'", addslashes($code));
+	    if(!$result = mysql_query($sql)) {
+	        return false;	        
+	    }
+	}
+	
+	if (mysql_num_rows($result) == 1) {	   
+	    return $result;
+	} else {
+	    return false;
+	}     
+
+}
+
 
 ?>

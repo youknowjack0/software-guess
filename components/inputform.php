@@ -50,6 +50,7 @@ $Author: youknowjack@gmail.com $
         var $errormessage;
         var $name;
         var $isResult;
+        var $buttons;
         
         public function __construct($type, $method, $currentfile, $name="f1") {
             $this->type = $type;
@@ -93,13 +94,35 @@ $Author: youknowjack@gmail.com $
         }
         
         public function printFooter() {
-            printf('<input type="submit" value="Submit" name="%s_submit"', $this->name);
+            foreach($this->buttons as $b) {
+                printf('<input type="submit" value="%s" name="%s"', $b[1], $b[0]);
+            }
             print('</form>');
         }
         
+       public function setButtons($buttons = null) {
+           if (!isset($buttons)) {
+               $this->buttons = array(array($this->name . "_submit", "Submit", "submit"));
+           } else {
+	           foreach($buttons as $b) {
+	               $this->buttons[0] = $this->name . "_" . $b[0];
+	               $this->buttons[1] = $b[1];
+	               $this->buttons[2] = $b[0];
+	           }
+           }
+       }
+        
+        /* returns button name if pressed, false otherwise */
         public function setRequest($req) {
             $this->req = $req;
-            if(isset($req[sprintf("%s_submit", $this->name)])) {
+            $buttonPressed = false;
+            foreach($this->buttons as $b) {
+                if(isset($req[$b[0]])) {
+                    $buttonPressed = $b[2];
+                    break;
+                }
+            }
+            if($buttonPressed) {
                 $this->isResult = true;                
                 foreach ($this->inputs as $i) {
                     if(isset($req[$i->name])) {                        

@@ -120,6 +120,16 @@ hr {
 	color: #090;
 }
 
+.estimates td, .estimates th {
+	border-style: none;
+	border-bottom-style: solid;
+	border-right-style: solid;
+	border-color: #AAA;
+	border-width: 1px;
+	padding: 5px;
+	margin: 0px;
+}
+
 
 input {
 	margin: 3px;

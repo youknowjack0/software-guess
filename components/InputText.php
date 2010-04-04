@@ -26,35 +26,35 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-FILE INFO: estimate-question.php
+FILE INFO: components/InputText.php
 $LastChangedDate: 2010-03-25 17:48:06 +0800 (Thu, 25 Mar 2010) $
 $Revision: 3 $
 $Author: youknowjack@gmail.com $
 */
-ob_start();
-require 'components/db.php';
-require 'question/Question.php';
-require 'components/utility.php';
 
-if ($rs_estimate = validateEstimateCode($_GET, "estimate") && $rs_question = validateQuestionCode($_GET)) {
-    $header_title = "Question response (estimate " . $_GET["estimate"] . ")";
-    
-    $allquestions = Question::getAllQuestions($_GET["estimate"]);
-    $q = $allquestions[$_GET["question"]];
-    
-    if($q->questiontemplate=="SimpleText") { //TODO: is it possible to replace this with something more OO?
-        $input = 
+class InputText extends Input {
+
+    function __construct($name, $column, $label, $validate='', $default='', $min=-1, $max=-1, $minlen=-1, $maxlen=-1, $locked=false) {
+        parent::__construct($name, $column, $label, $validate, $default, $min, $max, $minlen, $maxlen, $locked);
     }
-    
-    //generate an input
-    //$input = new Input
-    
-} else {
-    $header_title = "Estimate Question Error";
-    $template_error = "An error occured (perhaps the estimate code or question code is invalid?) " . mysql_error();
-} 
 
-$template_body = ob_get_clean();
-require 'templates/main.php';
+    function html() {
+        $str = sprintf('<label for="%s"%s>%s%s </label><div class="inputspace"><input name="%s" id="%s" type="text" value="%s"%s%s%s /></div>',
+        $this->column, // field name
+        (isset($this->labelClass) ? sprintf(' class="%s"',$this->labelClass) : ""), // label class
+        $this->label, //label text
+        $this->getHelpButton(), // help button
+        $this->column, //field name
+        $this->column, //field id
+        htmlspecialchars($this->value), //field value
+        ($this->locked ? ' readonly="readonly" class="lockedinput"' : ""), //islocked
+        (isset($this->class) ? sprintf(' class="%s"',$this->class) : ""),
+        $this->maxlen!=-1 ? sprintf(' maxlength="%s"',$this->maxlen) : ""); // input class
+
+        // the html function in the root class leaves a %s for fields based on it
+        return sprintf(parent::html(), $str);
+    }
+
+}
 
 ?>

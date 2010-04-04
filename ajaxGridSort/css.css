@@ -16,3 +16,17 @@
 	display:block;
 	border-width:1px;
 }
+
+table {
+	border-style: solid;
+	border-width: 1px;
+	border-color: #AAA;
+}
+
+table td {
+	border-style: none;
+	border-bottom-style: solid;
+	border-right-style: solid;
+	border-width: 1px;
+	border-color: #AAA;
+}
