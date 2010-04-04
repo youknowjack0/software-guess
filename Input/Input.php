@@ -33,6 +33,7 @@ $Author: youknowjack@gmail.com $
 */
 
 //TODO: star required items
+//TODO: merge name with column, they're serving the same purpose
 
 // class to represent a generic input
 
@@ -54,6 +55,7 @@ class Input {
     var $helpLink;
     var $shortHelp;
     var $errormessage;
+    var $template;
      
     function __construct($name, $column, $label, $validate='', $default='', $min=-1, $max=-1, $minlen=-1, $maxlen=-1, $locked=false) {
         $this->column = $column;
@@ -67,6 +69,11 @@ class Input {
         $this->locked = $locked;
         $this->name = $name;
         $this->displayOnly = false;
+        $this->template = 'compact.php';
+    }
+    
+    function setTemplate($file) {
+        $this->template = $file;
     }
 
     function setInputClass($class) {
@@ -85,21 +92,28 @@ class Input {
         $this->shortHelp = $helptext;
     }
      
-    //in this parent function, use %s as placeholder for child input fields
-    function html() {
-        $return = '<div class="formitem">%s';
-        // prints the documentation & necessary newlines
-
-        if(isset($this->helpLink)) {
-            $return .= sprintf(' [<a href="%s">documentation</a>]', $this->helpLink);
+    function html($code) {
+        
+        //load template
+        ob_start();
+        require 'Input/templates/' . $this->template;
+        $tstr = ob_get_clean();
+        
+        //define keyword replacement array
+        $keywords = array(
+           	"%fieldname%" => $this->name,
+            "%label%" => $this->label,
+            "%code%" => $code,
+            "%shorthelp%" =>  $this->shortHelp
+        );
+        
+        //perform replacement
+        foreach($keywords as $k => $v) {
+            $tstr = str_replace($k, $v, $tstr);
         }
         
-        //print("<br />");
-        if(isset($this->shortHelp)) {
-            $return .= sprintf('<div class="help" style="visibility:hidden;display:none;" id="%s_help">%s</div>', $this->name, $this->shortHelp);
-        }
-        $return .= '</div>';
-        return $return;
+        //return it
+        return $tstr;
     }
     
     function getHelpButton() {
@@ -177,5 +191,8 @@ class HTML extends Input {
     }
 
 }
+
+require 'Input/InputRadio.php';
+require 'Input/InputText.php';
 
 ?>

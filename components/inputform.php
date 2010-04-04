@@ -32,7 +32,7 @@ $Revision: 3 $
 $Author: youknowjack@gmail.com $
 
 */
-    require 'components/Input.php';
+    require 'Input/Input.php';
 
     // this file exposes the InputForm class
     
@@ -95,7 +95,7 @@ $Author: youknowjack@gmail.com $
         
         public function printFooter() {
             foreach($this->buttons as $b) {
-                printf('<input type="submit" value="%s" name="%s"', $b[1], $b[0]);
+                printf('<input type="submit" value="%s" name="%s" />', $b[1], $b[0]);
             }
             print('</form>');
         }
@@ -105,9 +105,11 @@ $Author: youknowjack@gmail.com $
                $this->buttons = array(array($this->name . "_submit", "Submit", "submit"));
            } else {
 	           foreach($buttons as $b) {
-	               $this->buttons[0] = $this->name . "_" . $b[0];
-	               $this->buttons[1] = $b[1];
-	               $this->buttons[2] = $b[0];
+	               $x = array();
+	               $x[0] = $this->name . "_" . $b[0];
+	               $x[1] = $b[1];
+	               $x[2] = $b[0];
+	               $this->buttons[] = $x;
 	           }
            }
        }
@@ -129,6 +131,7 @@ $Author: youknowjack@gmail.com $
                         $i->value = $req[$i->name];
                     }
                 }
+                return $buttonPressed;
             }
         }
         
