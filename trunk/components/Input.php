@@ -152,58 +152,11 @@ class Input {
         return $this->errormessage;
     }
     
-}
-
-class InputText extends Input {
-
-    function __construct($name, $column, $label, $validate='', $default='', $min=-1, $max=-1, $minlen=-1, $maxlen=-1, $locked=false) {
-        parent::__construct($name, $column, $label, $validate, $default, $min, $max, $minlen, $maxlen, $locked);
-    }
-
-    function html() {
-        $str = sprintf('<label for="%s"%s>%s%s </label><div class="inputspace"><input name="%s" id="%s" type="text" value="%s"%s%s%s /></div>',
-        $this->column, // field name
-        (isset($this->labelClass) ? sprintf(' class="%s"',$this->labelClass) : ""), // label class
-        $this->label, //label text
-        $this->getHelpButton(), // help button
-        $this->column, //field name
-        $this->column, //field id
-        htmlspecialchars($this->value), //field value
-        ($this->locked ? ' readonly="readonly" class="lockedinput"' : ""), //islocked
-        (isset($this->class) ? sprintf(' class="%s"',$this->class) : ""),
-        $this->maxlen!=-1 ? sprintf(' maxlength="%s"',$this->maxlen) : ""); // input class
-
-        // the html function in the root class leaves a %s for fields based on it
-        return sprintf(parent::html(), $str);
-    }
-
-}
-
-class InputRadio extends Input {
-
-    var $items = array();
-    
-    function __construct($name, $column, $label, $validate='', $default='', $min=-1, $max=-1, $minlen=-1, $maxlen=-1, $locked=false) {
-        parent::__construct($name, $column, $label, $validate, $default, $min, $max, $minlen, $maxlen, $locked);
-    }
-
-    function html() {
-        $str = sprintf("<label>%s%s</label><br />", $this->label, $this->getHelpButton());
-        foreach($this->items as $k => $v) {
-            $str .= sprintf('<label> </label><label><input name="%s" type="radio" value="%s"%s /> %s</label><br />', $this->name, htmlspecialchars($v), ($v == $this->value ?  ' checked="checked"' : ""), $k);
-        }
-
-        // the html function in the root class leaves a %s for fields based on it
-        return sprintf(parent::html(), $str);
+    function getValue() {
+        return $this->value;
     }
     
-    // add an item to the list
-    function add($val, $string) {
-        $this->items[$string] = $val;    
-    }
-
 }
-
 
 // use this to print some plain code as part of a form
 // does not behave like a normal input/output

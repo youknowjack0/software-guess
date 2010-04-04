@@ -49,24 +49,28 @@ class Question {
     var $minlen;
     var $maxlen;
     var $order;
-    var $Q;
+    public static $Q = array();
     
     /*      
      * guaranteed to be ordered by 'order' ascending
      * up to max version of $version
      * 
      */
-    static function getAllQuestions($estimatecode, $version) {
-        $Q = array();
+    static function getAllQuestions($estimatecode, $version = -1) {
+        $Q =& Question::$Q;
         $questions = array();
         $sql = "SELECT * FROM Questions ORDER BY `Order` ASC";
         $result = mysql_query($sql);
         $value;
+        $vString = "";
+        if($version != -1) {
+            $vString = sprintf(" AND Version <= %d", $version); 
+        }
         while($question = mysql_fetch_assoc($result)) {
             //grab the responses, least recent responses first
-            $sql = sprintf("SELECT `Value`, `IsArray`, `Version` FROM Responses WHERE Version <= %s AND QuestionCode = '%s' AND EstimateCode = '%s' ORDER BY Version ASC", $version, $question["Code"], $estimatecode);
-            $result2 = mysql_query($sql);
-                        
+            $sql = sprintf("SELECT `Value`, `IsArray`, `Version` FROM Responses WHERE QuestionCode = '%s' AND EstimateCode = '%s'%s ORDER BY Version ASC", $question["Code"], $estimatecode, $vString);
+            $result2 = mysql_query($sql);         
+            
             $qObj = new Question($question["Code"]);
             
             //set question fields
@@ -83,7 +87,7 @@ class Question {
             $qObj->maxlen = $question["MaxLen"];
             $qObj->order = $question["Order"];
             
-            if($result2) {
+            if(mysql_num_rows($result2)>0) {                
                 while($response = mysql_fetch_assoc($result2)) {
 	                if($response["IsArray"] == true) { //TODO: make this code work with escaped backslashes
 	                    $value = preg_split("/(?<!\\\\),/", $response["Value"]); //comma not preceded by a backslash
@@ -94,19 +98,23 @@ class Question {
 	                    $value = $response["Value"];
 	                }
 	                $Q[$question['Code']] = $value;
+	                $qObj->value[$response["Version"]] = $value;
                 }                      
             } else {
-                $val = eval($question['Default'].";");
-                $Q[$question['Code']] = $val;
-                $qObj->value[$response["Version"]] = $val;
+                if(isset($question["Default"]) && $question["Default"] != "") {
+                    eval("\$ALKJALKJSD=".$question['Default'].";"); //TODO: verify & shift to a private variable space
+                    $val = $ALKJALKJSD;
+                    $Q[$question['Code']] = $val;
+                    $qObj->value[0] = $val; // records the default value as belonging to version 0
+                }                             
             }
             
             //TODO: is there a better way to do this line?
-            $qObj->Q &= $Q;
             
             $questions[$qObj->code]=$qObj;
                     
         }
+        
         return $questions;        
     }
 
@@ -120,7 +128,7 @@ class Question {
      * false otherwise
      */
     function canAnswer() {
-        $Q = $this->Q;
+        $Q =& Question::$Q;
         eval("\$ISNGOISUGNOI=".$this->conditions.";");
         return $ISNGOISUGNOI;
     }

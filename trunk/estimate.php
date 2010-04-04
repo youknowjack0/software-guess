@@ -45,17 +45,19 @@ if ($result = validateEstimateCode($_GET, "estimate")) {
     //$lastq = $row["LastQuestionAnswered"];
     
     //print a list of questions TODO: images
-    $outofdatestr = " [out of date]";
-    $notansweredstr = " [not answered]";
-    $answeredstr = " [answered]";
+    $outofdatestr = "out of date";
+    $notansweredstr = "No";
+    $answeredstr = "Yes";
     $locked = true;
     
     //$currentstr = " [current]"
-    printf("<ol>");
-    
+    printf("<table class=\"estimates\">");
+    printf("<tr><th></th><th>Question</th><th>Answered?</th><th>Out of Date?</th><th>Locked?</th></tr>");
+    $i=1;
     foreach($questions as $k => $v) {
+        printf("<tr>");
         if(!$v->canAnswer()) {
-            $lockedstr = sprintf(" [locked! condition: <span class=\"code\">%s</span>]", $v->conditions);
+            $lockedstr = sprintf("locked! condition: <span class=\"code\">%s</span>", $v->conditions);
             $regex = '/(\\$Q\\["|\\$Q\[\')([a-zA-Z0-9_]+)("\]|\'\])/';
             //printf($regex); //debug            
             $lockedstr = preg_replace($regex, sprintf('<a href="estimate-question.php?estimate=%s&question=%s">$2</a>', $_GET["estimate"], $v->code) , $lockedstr); //replace $Q["CODE"]/$Q['CODE'] with a link
@@ -65,12 +67,14 @@ if ($result = validateEstimateCode($_GET, "estimate")) {
             $lockedstr = "";
         }
         if(!$locked) {
-            printf('<li><a href="#">%s</a>%s%s%s</li>', $v->name, ($v->hasValue()?$answeredstr:$notansweredstr), ($v->isUpToDate($version)?"":$outofdatestr), $lockedstr );
+            printf('<td>%d.</td><td><a href="estimate-question.php?estimate=%s&question=%s">%s</a></td><td>%s</td><td>%s</td><td></td>',$i, $_GET["estimate"], $v->code, $v->name, ($v->hasValue()?$answeredstr:$notansweredstr), ($v->isUpToDate($version)?"":$outofdatestr) );
         } else {
-            printf('<li>%s%s%s%s</li>', $v->name, ($v->hasValue()?$answeredstr:$notansweredstr), ($v->isUpToDate($version)?"":$outofdatestr), $lockedstr);
+            printf('<td>%d.</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td>',$i, $v->name, ($v->hasValue()?$answeredstr:$notansweredstr), ($v->isUpToDate($version)?"":$outofdatestr), $lockedstr);
         }
+        printf("</tr>");
+        $i++;
     }
-    printf("</ol>");
+    printf("</table>");
 } else {
     $header_title = "Estimate";
     $template_error = "An error occured (perhaps the Access Code is invalid?) " . mysql_error();
