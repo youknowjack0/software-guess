@@ -1,0 +1,5 @@
+%fieldname%
+%label%
+%code%
+%shorthelp%
+%longhelp%

@@ -101,7 +101,7 @@ $header_extra = '<link rel="stylesheet" href="static/forms.css" type="text/css" 
 // print form
 $form->printHeader();
 $form->printBody();
-print("<br /><br />");
+print("<br />");
 $form->printFooter();
 print("<br />");
 
