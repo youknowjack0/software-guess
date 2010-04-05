@@ -66,7 +66,7 @@ $Author: youknowjack@gmail.com $
         } elseif ($item["type"] == "input") {
             printf('<form method="GET" action="%s" >', $item["file"]);
             printf('<img src="%s" class="biglinks_image" alt="%s" /><br />%s<br />', $item["image"], $item["name"], $item["name"]);
-            echo '<input type="text" name="code" size="6" />';
+            printf('<input type="text" name="%s" size="6" />', $item["field"]);
             echo '<input type="submit" name="submit" value="Go" />';
             echo '</form>';
         }        

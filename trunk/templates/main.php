@@ -49,6 +49,11 @@ $HeadURL: https://software-guess.googlecode.com/svn/trunk/index.php $
 		<div id="topright">
 			<img src="static/GUESSfull.png" />
 		</div>
+		<?php if(isset($template_breadcrumbs)) {
+		    echo '<div class="breadcrumbs">';
+		    echo $template_breadcrumbs;
+		    echo '</div>';
+		}?>
 		<?php if(isset($template_headerspace)) { 
 		    echo $template_headerspace;
 		} else {
@@ -65,7 +70,7 @@ $HeadURL: https://software-guess.googlecode.com/svn/trunk/index.php $
 		<hr />
 		<div style="text-align:center;font-size:small;">
 			&copy; 2010 Jack Langman, Daniel Fozdar, Nelson Yiap, Zhihua Guo, Vivek Koul & Aaron Taylor. All rights reserved. <br/>
-			Icons used with permission under the GPL license, <a href="copyrightimages/license.txt">read here</a>.
+			Icons used with permission under the GPL/LGPL licenses, <a href="copyrightimages/license.txt">read here</a> & <a href="copyrightimages2/license.txt">here</a>.
 		</div>
 	</div>
 </body>

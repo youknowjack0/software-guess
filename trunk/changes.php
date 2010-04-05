@@ -26,7 +26,7 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-FILE INFO: estimatehome.php
+FILE INFO: changes.php
 $LastChangedDate: 2010-04-01 16:10:29 +0800 (Thu, 01 Apr 2010) $
 $Revision: 14 $
 $Author: youknowjack@gmail.com $
@@ -34,28 +34,66 @@ $Author: youknowjack@gmail.com $
 ob_start();
 require 'components/db.php';
 require 'components/utility.php';
+require 'question/Question.php';
 
-if ($result = validateEstimateCode($_GET, 'estimate')) {
-            
+if ($rs_estimate = validateEstimateCode($_GET, 'estimate')) {
+    $row_estimate = mysql_fetch_assoc($rs_estimate);
+    $estimatecode = $row_estimate["AccessCode"];
+    $version = $row_estimate["LastIteration"] + 1;
 
-    //show links across the top; 'start estimating', 'reports' & 'change history'
-    $row = mysql_fetch_assoc($result);
-    $header_title = sprintf("Estimate Home (%s)", $row["AccessCode"]);
-    $template_breadcrumbs = getBreadcrumbs('estimatehome.php', array("estimate" => $_GET["estimate"]));
-    $biglinks_items = array(
-        array("name" => "Start Estimating", "file" => "estimate.php?estimate=".$_GET["estimate"], "image" => "copyrightimages/pencil.png", "type" => "button"),
-        array("name" => "Simple Report", "file" => "report_simple.php?estimate=".$_GET["estimate"], "image" => "copyrightimages/reports.png", "type" => "button", "disabled" => ($row["LastIteration"]>0?false:true)),
-        array("name" => "Extended Report", "file" => "report_extended.php?estimate=".$_GET["estimate"], "image" => "copyrightimages/largereport.png", "type" => "button", "disabled" => ($row["LastIteration"]>0?false:true)),
-        array("name" => "Raw Calculations", "file" => "calculations.php?estimate=".$_GET["estimate"], "image" => "copyrightimages2/math.png", "type" => "button", "disabled" => ($row["LastIteration"]>0?false:true)),
-        array("name" => "Change History", "file" => "changes.php?estimate=".$_GET["estimate"], "image" => "copyrightimages/cert.png", "type" => "button", "disabled" => ($row["LastIteration"]>0?false:true))
-    );
-    require 'components/biglinks.php';
-    echo "<hr />";
-    echo "<h3>View/Edit Estimate Details</h3>";
+    $header_title = "Change History (estimate " . $estimatecode . ")";
+
+    $template_breadcrumbs = getBreadcrumbs('changes.php', array("estimate" => $estimatecode));
+
+    $questions = Question::getAllQuestions($estimatecode, $version);
+
+    $lastgroup = -1;
+
+    //$currentstr = " [current]"
+    printf("<table class=\"estimates\">");
+    printf("<tr class=\"estimatemainheader\"><th></th><th>Question</th>");
     
+    for($i=1;$i<=$version;$i++) {        
+        printf("<th>%d</th>", $i);        
+    }
+    
+    printf("</tr>");
+    
+    $qnum=1;
+    foreach($questions as $k => $v) {
+
+        //print group header if required
+        if($lastgroup != $v->groupid) {
+
+            $sql = sprintf("SELECT * FROM `questiongroups` WHERE `id` = %s", $v->groupid);
+            $r_group = mysql_query($sql);
+            $row_group = mysql_fetch_assoc($r_group);
+
+            printf("<tr><th class=\"estimategroupheader\" colspan=\"%d\">%s</td>",$version + 2, $row_group["GroupName"]);
+
+            $lastgroup = $v->groupid;
+        }
+
+        printf("<tr>");
+        
+        printf("<th>%d</th>", $qnum);
+        printf("<td>%s</td>", $v->name);
+
+        for($i=1;$i<=$version;$i++) {        
+            if(isset($v->value[$i])) {
+                printf("<td><image src=\"copyrightimages/newsmall.png\" alt=\"New Version\" />");
+            } else {
+                print("<td></td>");
+            }        
+        }
+        
+        printf("</tr>");
+        $qnum++;
+    }
+    printf("</table>");
 
 } else {
-    $header_title = "Estimate Home";
+    $header_title = "Change History";
     $template_error = "An error occured (perhaps the Access Code is invalid?) " . mysql_error();
 }
 

@@ -46,6 +46,8 @@ if (($rs_estimate = validateEstimateCode($_REQUEST, "estimate")) && ($allquestio
     
     $header_title = "Question response (estimate " . $estimatecode . ")";
     $header_extra = '<link rel="stylesheet" href="static/forms.css" type="text/css" />';
+    $template_breadcrumbs = getBreadcrumbs('estimate-question.php', array("estimate" => $_GET["estimate"]));
+    
     
     $q = $allquestions[$_REQUEST["question"]];
     
