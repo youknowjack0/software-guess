@@ -37,10 +37,11 @@ require 'question/Question.php';
 require 'components/utility.php';
 
 if ($result = validateEstimateCode($_GET, "estimate")) {
-    $header_title = sprintf("Estimate (%s)", $_GET["estimate"]);
+    
     $row = mysql_fetch_assoc($result);
     $version = $row["LastIteration"]+1;
-    $questions = Question::getAllQuestions("XXX", $version);
+    $header_title = sprintf("Estimate (%s version %d)", $_GET["estimate"], $version);
+    $questions = Question::getAllQuestions(strtoupper($_GET["estimate"]), $version);
     
     //$lastq = $row["LastQuestionAnswered"];
     
@@ -50,17 +51,34 @@ if ($result = validateEstimateCode($_GET, "estimate")) {
     $answeredstr = "Yes";
     $locked = true;
     
+    //prepare teh group 
+    $lastgroup = -1;
+    
     //$currentstr = " [current]"
     printf("<table class=\"estimates\">");
-    printf("<tr><th></th><th>Question</th><th>Answered?</th><th>Out of Date?</th><th>Locked?</th></tr>");
+    printf("<tr class=\"estimatemainheader\"><th></th><th>Question</th><th>Answered?</th><th>Out of Date?</th><th>Locked?</th></tr>");
     $i=1;
     foreach($questions as $k => $v) {
+        
+        //print group header if required
+        if($lastgroup != $v->groupid) {
+            
+            $sql = sprintf("SELECT * FROM `questiongroups` WHERE `id` = %s", $v->groupid);
+            $r_group = mysql_query($sql);
+            $row_group = mysql_fetch_assoc($r_group);            
+            
+            printf("<tr><th class=\"estimategroupheader\" colspan=\"5\">%s</td>", $row_group["GroupName"]);
+            
+            $lastgroup = $v->groupid;
+        }
+        
         printf("<tr>");
         if(!$v->canAnswer()) {
             $lockedstr = sprintf("locked! condition: <span class=\"code\">%s</span>", $v->conditions);
             $regex = '/(\\$Q\\["|\\$Q\[\')([a-zA-Z0-9_]+)("\]|\'\])/';
             //printf($regex); //debug            
             $lockedstr = preg_replace($regex, sprintf('<a href="estimate-question.php?estimate=%s&question=%s">$2</a>', $_GET["estimate"], $v->code) , $lockedstr); //replace $Q["CODE"]/$Q['CODE'] with a link
+            $locked = true;
             //TODO: don't show a link if the target is locked            
         } else {
             $locked = false;

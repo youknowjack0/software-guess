@@ -49,6 +49,10 @@ class Question {
     var $minlen;
     var $maxlen;
     var $order;
+    var $groupid;
+    var $dbkey; //for the LATEST RESPONSE
+    var $dbversion=0; //version of latest value from the db //TODO: This is not nice n clear
+    
     public static $Q = array();
     
     /*      
@@ -68,7 +72,7 @@ class Question {
         }
         while($question = mysql_fetch_assoc($result)) {
             //grab the responses, least recent responses first
-            $sql = sprintf("SELECT `Value`, `IsArray`, `Version` FROM Responses WHERE QuestionCode = '%s' AND EstimateCode = '%s'%s ORDER BY Version ASC", $question["Code"], $estimatecode, $vString);
+            $sql = sprintf("SELECT `ID`, `Value`, `IsArray`, `Version` FROM Responses WHERE QuestionCode = '%s' AND EstimateCode = '%s'%s ORDER BY Version ASC", $question["Code"], $estimatecode, $vString);
             $result2 = mysql_query($sql);         
             
             $qObj = new Question($question["Code"]);
@@ -86,6 +90,8 @@ class Question {
             $qObj->minlen = $question["MinLen"];
             $qObj->maxlen = $question["MaxLen"];
             $qObj->order = $question["Order"];
+            $qObj->groupid = $question["Group"];
+            /*$qObj->dbkey = $question["ID"];*/
             
             if(mysql_num_rows($result2)>0) {                
                 while($response = mysql_fetch_assoc($result2)) {
@@ -99,13 +105,18 @@ class Question {
 	                }
 	                $Q[$question['Code']] = $value;
 	                $qObj->value[$response["Version"]] = $value;
+	                $qObj->dbversion = $response["Version"];
+	                $qObj->dbkey = $response["ID"];
                 }                      
             } else {
                 if(isset($question["Default"]) && $question["Default"] != "") {
-                    eval("\$ALKJALKJSD=".$question['Default'].";"); //TODO: verify & shift to a private variable space
-                    $val = $ALKJALKJSD;
-                    $Q[$question['Code']] = $val;
-                    $qObj->value[0] = $val; // records the default value as belonging to version 0
+                    //suppress errors
+                    ob_start();
+                        eval("\$ALKJALKJSD=".$question['Default'].";"); //TODO: verify & shift to a private variable space
+                        $val = $ALKJALKJSD;                        
+                        //$Q[$question['Code']] = $val; //don't set Q w/ default values
+                        $qObj->value[0] = $val; // records the default value as belonging to version 0
+                    ob_end_clean();
                 }                             
             }
             
@@ -133,13 +144,62 @@ class Question {
         return $ISNGOISUGNOI;
     }
     
+    /* true on success, false on fail. use mysql_error for error text */
+    function committResponse($latestversion, $estimatecode) {
+                    
+        $val = $this->getLatestValue();
+        $isArr = 0;
+
+        if(is_array($val)) {
+            $isArr = 1;
+            foreach($val as $v) {
+                $v = str_replace(",", "\,", $v); //escape commas            
+            }
+            $val = implode(",", $val);
+        }
+        
+        $val = addslashes($val); //safe for sql execution
+        
+        $fieldmapping = array(
+            "QuestionCode" => strtoupper($this->code),
+            "Value" => $val,
+            "EstimateCode" => strtoupper($estimatecode),
+            "IsArray" => $isArr,
+            "Version" => $latestversion        
+        );      
+        
+        if(intval($this->dbversion) < intval($latestversion) || intval($this->dbversion) == 0) { //insert new response
+            $sqltemplate = "INSERT INTO `responses` (`%s`) VALUES('%s')";
+            $fields = array();
+            foreach($fieldmapping as $k => $v) {
+                $fields[] = $k;
+            }
+            $sql = sprintf($sqltemplate, implode("`,`", $fields), implode("','", $fieldmapping));                      
+        } elseif (intval($this->dbversion) == intval($latestversion)) { //update existing response
+            if (!isset($this->dbkey)) die(); //this should never happen; it's here to protect the db          
+            $sqltemplate = "UPDATE `responses` SET %s WHERE `ID`=%s";
+            $mixfield = array();
+            foreach($fieldmapping as $f => $v) {
+                $mixfield[] = sprintf("`%s`='%s'", $f, $v);
+            }
+                        
+            $sql = sprintf($sqltemplate, implode(",", $mixfield), $this->dbkey);              
+            
+        } else {            
+            die(); //this shouldn't happen
+        }
+        
+        mysql_query($sql);
+        
+    }
+    
     //TODO: cleanup
     function isUpToDate($latest) {
         if($latest==1) {
             return true;
         }
-        if(!isset($this->value)) {
-            return false;
+        if(!isset(Question::$Q[$this->code])) {
+            return true;
         }
         $ver;
         foreach($this->value as $k => $v) {
@@ -175,11 +235,29 @@ class Question {
         }
     }
     
+    //todo: neaten this up
+    function getLatestValueVersion() {
+        $key;
+        foreach($this->value as $k => $v) {
+            $key = $k;
+        }
+        if(!isset($key)) {
+            return;
+        } else {
+            return $key;
+        }        
+        
+    }
+    
     function hasValue() {
-        if(isset($this->value)) {
+        if(isset($this->value) && $this->getLatestValueVersion() > 0) {
             return true;
         }
         return false;
+    }
+    
+    function setResponse($version, $value) {
+        $this->value[$version] = $value;
     }
 
 }

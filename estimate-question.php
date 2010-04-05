@@ -38,14 +38,18 @@ require 'components/utility.php';
 require 'components/inputform.php';
 
 
-if ($rs_estimate = validateEstimateCode($_GET, "estimate") && $rs_question = validateQuestionCode($_GET)) {
-    $header_title = "Question response (estimate " . $_GET["estimate"] . ")";
+if (($rs_estimate = validateEstimateCode($_REQUEST, "estimate")) && ($allquestions = validateQuestionCode($_REQUEST))) {
+    
+    $row_estimate = mysql_fetch_assoc($rs_estimate);   
+    $latestversion = $row_estimate["LastIteration"] +1;
+    $estimatecode = $row_estimate["AccessCode"];
+    
+    $header_title = "Question response (estimate " . $estimatecode . ")";
     $header_extra = '<link rel="stylesheet" href="static/forms.css" type="text/css" />';
     
-    $allquestions = Question::getAllQuestions($_GET["estimate"]);
-    $q = $allquestions[$_GET["question"]];
+    $q = $allquestions[$_REQUEST["question"]];
     
-    $form = new InputForm(-1, "GET", "estimate-question.php");
+    $form = new InputForm(-1, "POST", sprintf("estimate-question.php?estimate=%s&question=%s", $estimatecode, $_REQUEST["question"]));
         
     $name = "megainput";    
     $column = "megainput";
@@ -61,16 +65,57 @@ if ($rs_estimate = validateEstimateCode($_GET, "estimate") && $rs_question = val
         $input = new InputText($name, $column, $label, $validate, $default, $min, $max, $minlen, $maxlen, false);
     }          
     $input->setHelp($q->shorthelp);
+    $input->setLongHelp($q->longhelp);
+    $input->setTemplate('extended.php');
+    
     
     $form->addInput($input);
     
     $form->setButtons(array(array("savereturn","Save &amp; return"), array("savenext", "Save &amp; next")));
     
+    
     $whichbutton = $form->setRequest($_REQUEST);
     
     if($form->isResult()) {
-        if($form->isValid()) {
-            print($whichbutton);
+        if($form->isValid()) { //TODO: confirmation success message
+            $q->setResponse($latestversion, $input->getValue());
+            $q->committResponse($latestversion, $estimatecode);
+            $success = urlencode(sprintf("Updated %s successfully!", $q->name));
+            if($whichbutton == "savereturn") {
+                header(sprintf("Location: estimate.php?estimate=%s&success=%s",$estimatecode,$success));
+                exit;
+            } elseif($whichbutton == "savenext") {
+                //update Q so the lock calculation will be correct:
+                Question::$Q[$_REQUEST["question"]]=$q->getLatestValue();
+                
+                //figure out which question is next
+                $next = false;
+                $nextq;
+                foreach($allquestions as $ak => $aq) {                    
+                    if($next) {
+                        $nextq = $aq; 
+                        break;
+                    }
+                    if(strtoupper($ak) == strtoupper($_REQUEST['question'])) {
+                        $next = true;
+                    }
+                }
+                                
+                //test it's condition
+                if(isset($nextq) && $nextq->canAnswer()) {
+                    $location = sprintf("estimate-question.php?estimate=%s&question=%s", $estimatecode, $nextq->code);
+                    $error = "";
+                } elseif(!isset($nextq)) {
+                    $error = urlencode("Could not go to next question, you just answered the last question.");
+                    $location = sprintf("estiamte.php?estimate=%s", $estimatecode);
+                } elseif(!$nextq->canAnswer()) {
+                    $error = urlencode("Could not go to the next question, it seems to be locked. Please pick another question");
+                    $location = sprintf("estimate.php?estimate=%s", $estimatecode);
+                }
+                
+                header(sprintf("Location: %s&error=%s&success=%s",$location,$error,$success));
+                exit;
+            }
         } else {
             $template_error = $form->getError();   
         }        
@@ -80,17 +125,18 @@ if ($rs_estimate = validateEstimateCode($_GET, "estimate") && $rs_question = val
 	$form->printHeader();
 	$form->printBody();
 	print("<br />");
-	//maintain state
-	printf('<input type="hidden" name="estimate" value="%s"', $_GET['estimate']);
-	printf('<input type="hidden" name="question" value="%s"', $_GET['question']);
+	//maintain state (changed action instead)
+	//printf('<input type="hidden" name="estimate" value="%s"', $_REQUEST['estimate']);
+	//printf('<input type="hidden" name="question" value="%s"', $_REQUEST['question']);
 	
 	//finish printing form
 	$form->printFooter();
+	printf("<br /><a href=\"estimate.php?estimate=%s\">Discard Changes</a>", $estimatecode);
     
     
 } else {
     $header_title = "Estimate Question Error";
-    $template_error = "An error occured (perhaps the estimate code or question code is invalid?) " . mysql_error();
+    $template_error = "An error occured (perhaps the code is invalid, or the question is locked?) " . mysql_error(); //TODO: Better error here
 } 
 
 $template_body = ob_get_clean();

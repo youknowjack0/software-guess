@@ -69,23 +69,18 @@ function validateEstimateCode($req, $field = 'code') {
 }
 
 /* if valid returns the mysql result, else false */
-function validateQuestionCode($req, $field = 'question') {
+function validateQuestionCode($req) {
 
-	if (!isset($req[$field])) {
+	if (!isset($req['question'])) {
 	    return false;
 	} else {
-	    $code = $_GET[$field];
-	    $sql = sprintf("SELECT * FROM Questions WHERE `Code` = '%s'", addslashes($code));
-	    if(!$result = mysql_query($sql)) {
-	        return false;	        
+	    $allquestions = Question::getAllQuestions(addslashes($req["estimate"]));
+	    if(isset($allquestions[$req['question']]) && $allquestions[$req['question']]->canAnswer()) {
+	        return $allquestions;
+	    } else {
+	        return false;
 	    }
 	}
-	
-	if (mysql_num_rows($result) == 1) {	   
-	    return $result;
-	} else {
-	    return false;
-	}     
 
 }
 
