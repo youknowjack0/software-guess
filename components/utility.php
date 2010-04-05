@@ -84,5 +84,52 @@ function validateQuestionCode($req) {
 
 }
 
+function getBreadcrumbs($file, $parameters) {
+    $sitemap = array (
+        "Home" => array("file" => "index.php"),
+        "Estimate Home" => array("file" => "estimatehome.php", "params" => array("estimate"), "parent" => "Home"),
+        "Question List" => array("file" => "estimate.php", "params" => array("estimate"), "parent" => "Estimate Home"),
+        "Question" => array("file" => "estimate-question.php", "params" => array("estimate", "question"), "parent" => "Question List"),
+        "Change History" => array("file" => "changes.php", "params" => array("estimate"), "parent" => "Estimate Home")    
+    );
+    
+    $linktemplate = '<a href="%s">%s</a> &gt; ';
+    
+    //find file
+    $thispage;
+    $thispagename;
+    foreach($sitemap as $p => $v) {
+        if($v["file"] == $file) {
+            $thispage = $v;
+            $thispagename = $p; 
+            break;
+        }
+    }
+    
+    $linkstr = $thispagename;
+    
+    $page =& $thispage;
+    while(isset($page["parent"])) {
+        $pagename = $page["parent"];
+        $page =& $sitemap[$pagename];
+        $str = "";
+        $paramarray;
+        if(isset($page["params"])) {
+            foreach($page["params"] as $p) {
+                $paramarray[$p] = $parameters[$p]; //relevant parameters only
+            }
+            foreach($paramarray as $k => $p) {
+                $paramarray[$k] = $k . "=" . $p;
+            }
+            $str = "?" . implode("&",$paramarray);            
+        }
+        
+        $linkstr = sprintf($linktemplate, $page["file"] . $str, $pagename) . $linkstr;        
+    }
+    
+    return $linkstr;
+    
+}
+
 
 ?>

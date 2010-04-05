@@ -1,0 +1,2 @@
+Icons in this folder are copyright Oxygen under the LGPL license, see:
+http://www.oxygen-icons.org/?page_id=4

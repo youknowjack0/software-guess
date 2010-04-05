@@ -43,6 +43,9 @@ if ($result = validateEstimateCode($_GET, "estimate")) {
     $header_title = sprintf("Estimate (%s version %d)", $_GET["estimate"], $version);
     $questions = Question::getAllQuestions(strtoupper($_GET["estimate"]), $version);
     
+    $template_breadcrumbs = getBreadcrumbs('estimate.php', array("estimate" => $_GET["estimate"]));
+    
+    
     //$lastq = $row["LastQuestionAnswered"];
     
     //print a list of questions TODO: images

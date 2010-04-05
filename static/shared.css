@@ -24,6 +24,14 @@ body {
 	font-family: sans-serif;
 }
 
+.breadcrumbs {
+	padding-bottom: 5px;
+	padding-top: 5px;
+	border-bottom-style: solid;
+	border-bottom-color: #369;
+	border-bottom-width: 1px;
+}
+
 .estimategroupheader {
 	text-align: left;
 	background-color: #FFD;	
