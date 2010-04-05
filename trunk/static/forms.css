@@ -25,6 +25,27 @@ label {
 	width: 300px;
 }
 
+.labelspace {
+	display: inline-block;
+	clear: right;
+	float: left;
+	padding: 5px;
+}
+
+.extendedlabel {
+	display: block;
+	font-weight: bold;	
+}
+	
+.extendedinputspace {
+	display: block;
+}
+
+.extendedinfo {
+	display: block;
+	padding: 10px;
+	}
+
 .formitem {
 	display: block;
 	width: auto;

@@ -24,6 +24,15 @@ body {
 	font-family: sans-serif;
 }
 
+.estimategroupheader {
+	text-align: left;
+	background-color: #FFD;	
+}
+
+.estimatemainheader {
+	background-color: #EEC;	
+}
+
 h2  {
 	margin: 0px;
 	padding: 0px;
@@ -46,7 +55,7 @@ hr {
 }
 
 #bigboy {
-	width: 1000px;
+	width: 800px;
 	-moz-border-radius: 8px;
 	-webkit-border-radius: 8px;
 	background-color: #FFF;

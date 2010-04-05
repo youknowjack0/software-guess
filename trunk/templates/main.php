@@ -57,7 +57,9 @@ $HeadURL: https://software-guess.googlecode.com/svn/trunk/index.php $
 		?>	
 		<hr />
 		<?php if(isset($template_error) && $template_error != "") { ?><div class="error"><?php echo $template_error; ?></div><?php } ?>
+		<?php if(isset($_REQUEST['error']) && $_REQUEST['error'] != "") { ?><div class="error"><?php echo htmlspecialchars($_REQUEST['error']); ?></div><?php } ?>
 		<?php if(isset($template_success) && $template_success != "") { ?><div class="success"><?php echo $template_success; ?></div><?php } ?>
+		<?php if(isset($_REQUEST['success']) && $_REQUEST['success'] != "") { ?><div class="success"><?php echo htmlspecialchars($_REQUEST['success']); ?></div><?php } ?>
 		<noscript><div class="error">Javascript is required to use most of this software.</div></noscript>
 		<?php echo $template_body; ?>
 		<hr />

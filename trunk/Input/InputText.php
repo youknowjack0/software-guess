@@ -39,11 +39,7 @@ class InputText extends Input {
     }
 
     function html() {
-        $str = sprintf('<label for="%s"%s>%s%s </label><div class="inputspace"><input name="%s" id="%s" type="text" value="%s"%s%s%s /></div>',
-        $this->column, // field name
-        (isset($this->labelClass) ? sprintf(' class="%s"',$this->labelClass) : ""), // label class
-        $this->label, //label text
-        $this->getHelpButton(), // help button
+        $str = sprintf('<input name="%s" id="%s" type="text" value="%s"%s%s%s />',        
         $this->column, //field name
         $this->column, //field id
         htmlspecialchars($this->value), //field value
@@ -52,7 +48,7 @@ class InputText extends Input {
         $this->maxlen!=-1 ? sprintf(' maxlength="%s"',$this->maxlen) : ""); // input class
 
         // the html function in the root class leaves a %s for fields based on it
-        return sprintf(parent::html(), $str);
+        return parent::html($str);
     }
 
 }

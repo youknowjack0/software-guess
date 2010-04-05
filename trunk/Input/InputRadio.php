@@ -41,13 +41,12 @@ class InputRadio extends Input {
     }
 
     function html() {
-        $str = sprintf("<label>%s%s</label><br />", $this->label, $this->getHelpButton());
+        $str = "";
         foreach($this->items as $k => $v) {
-            $str .= sprintf('<label> </label><label><input name="%s" type="radio" value="%s"%s /> %s</label><br />', $this->name, htmlspecialchars($v), ($v == $this->value ?  ' checked="checked"' : ""), $k);
+            $str .= sprintf('<label><input name="%s" type="radio" value="%s"%s /> %s</label>', $this->name, htmlspecialchars($v), ($v == $this->value ?  ' checked="checked"' : ""), $k);
         }
 
-        // the html function in the root class leaves a %s for fields based on it
-        return sprintf(parent::html(), $str);
+        return parent::html($str);
     }
     
     // add an item to the list

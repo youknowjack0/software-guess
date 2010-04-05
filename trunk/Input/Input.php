@@ -54,6 +54,7 @@ class Input {
     var $displayOnly;
     var $helpLink;
     var $shortHelp;
+    var $longHelp;
     var $errormessage;
     var $template;
      
@@ -70,6 +71,7 @@ class Input {
         $this->name = $name;
         $this->displayOnly = false;
         $this->template = 'compact.php';
+        $this->longHelp = "";
     }
     
     function setTemplate($file) {
@@ -91,6 +93,10 @@ class Input {
     function setHelp($helptext) {
         $this->shortHelp = $helptext;
     }
+    
+    function setLongHelp($helptext) {
+        $this->longHelp = $helptext;
+    }
      
     function html($code) {
         
@@ -104,7 +110,8 @@ class Input {
            	"%fieldname%" => $this->name,
             "%label%" => $this->label,
             "%code%" => $code,
-            "%shorthelp%" =>  $this->shortHelp
+            "%shorthelp%" =>  $this->shortHelp, 
+            "%longhelp%" => $this->longHelp        
         );
         
         //perform replacement
@@ -116,12 +123,12 @@ class Input {
         return $tstr;
     }
     
-    function getHelpButton() {
+    /*function getHelpButton() {
         if(isset($this->shortHelp)) {
             return sprintf(' <a href="#" onclick="javascript:toggleVisibility(\'%s\');">[?]</a>', $this->name . "_help");
         }
         return "";
-    }
+    }*/
     
     function isValid() {
         $this->errormessage = "";

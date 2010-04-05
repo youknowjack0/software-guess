@@ -1,5 +1,7 @@
 <div class="formitem">
-	<label for="%fieldname%">%label% <a href="#" onclick="javascript:toggleVisibility('%fieldname%_help');">[?]</a></label>
+	<div class="labelspace">
+		<label for="%fieldname%">%label% <a href="javascript:;" onclick="javascript:toggleVisibility('%fieldname%_help');">[?]</a></label>
+	</div>
 	<div class="inputspace">
 		%code%
 	</div>
