@@ -169,7 +169,7 @@ class Question {
         );      
         
         if(intval($this->dbversion) < intval($latestversion) || intval($this->dbversion) == 0) { //insert new response
-            $sqltemplate = "INSERT INTO `responses` (`%s`) VALUES('%s')";
+            $sqltemplate = "INSERT INTO `Responses` (`%s`) VALUES('%s')";
             $fields = array();
             foreach($fieldmapping as $k => $v) {
                 $fields[] = $k;
@@ -177,7 +177,7 @@ class Question {
             $sql = sprintf($sqltemplate, implode("`,`", $fields), implode("','", $fieldmapping));                      
         } elseif (intval($this->dbversion) == intval($latestversion)) { //update existing response
             if (!isset($this->dbkey)) die(); //this should never happen; it's here to protect the db          
-            $sqltemplate = "UPDATE `responses` SET %s WHERE `ID`=%s";
+            $sqltemplate = "UPDATE `Responses` SET %s WHERE `ID`=%s";
             $mixfield = array();
             foreach($fieldmapping as $f => $v) {
                 $mixfield[] = sprintf("`%s`='%s'", $f, $v);
@@ -259,6 +259,23 @@ class Question {
     function setResponse($version, $value) {
         $this->value[$version] = $value;
     }
+    
+    /* use this to get html to display the value of a particular version */ 
+    function getValueHtml($version) {
+
+        $output = sprintf("%s <strong>(v%d)</strong><hr />", $this->name, $version);
+        
+        if (is_array($this->value[$version])) {
+            ob_start();
+            print_r($this->value[$version]);
+            $output .= htmlspecialchars(ob_get_clean());
+        } else {
+            $output .= htmlspecialchars($this->value[$version]);
+        }
+        
+        return $output;
+        
+    }  
 
 }
 

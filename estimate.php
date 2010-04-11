@@ -66,7 +66,7 @@ if ($result = validateEstimateCode($_GET, "estimate")) {
         //print group header if required
         if($lastgroup != $v->groupid) {
             
-            $sql = sprintf("SELECT * FROM `questiongroups` WHERE `id` = %s", $v->groupid);
+            $sql = sprintf("SELECT * FROM `QuestionGroups` WHERE `id` = %s", $v->groupid);
             $r_group = mysql_query($sql);
             $row_group = mysql_fetch_assoc($r_group);            
             

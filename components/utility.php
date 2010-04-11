@@ -55,7 +55,7 @@ function validateEstimateCode($req, $field = 'code') {
 	    return false;
 	} else {
 	    $code = $_GET[$field];
-	    $sql = sprintf("SELECT * FROM estimates WHERE AccessCode = '%s'", addslashes($code));
+	    $sql = sprintf("SELECT * FROM Estimates WHERE AccessCode = '%s'", addslashes($code));
 	    if(!$result = mysql_query($sql)) {
 	        return false;
 	    }

@@ -42,6 +42,7 @@ $HeadURL: https://software-guess.googlecode.com/svn/trunk/index.php $
 <script language="javascript" src="static/shared.js"></script>
 </head>
 <body <?php if (isset($header_bodytag_extra)) {echo $header_bodytag_extra;} ?>>
+
 	<div id="bigboy">
 		<div id="topdiv">
 			<a href="index.php"><img style="border:none;" src="static/GUESStitle.png" alt="G.U.E.S.S." /></a>
