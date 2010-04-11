@@ -19,6 +19,10 @@
 	font-weight: bold;
 }
 
+image {
+	border-style: none;
+}
+
 body {
 	background-color: #EEE;
 	font-family: sans-serif;
@@ -58,7 +62,7 @@ h3  {
 hr {
 	border-style: none;
 	border-bottom-style: solid;
-	border-size: 1px;
+	border-width: 1px;
 	border-color: #ff6600;
 }
 
@@ -75,7 +79,7 @@ hr {
 	position: absolute;
 	display: block;
 	left: 50%;
-	margin-left: -500px;
+	margin-left: -400px;
 }
 
 #topdiv {

@@ -35,6 +35,6 @@ $Author: youknowjack@gmail.com $
     $ags_numFields = 6;
     $ags_arrFields = array('ID', 'Project Name','Domain Experience','Field Experience','Estimated Effort','Actual Effort');
     $ags_filename = "calibrate.php";
-    $ags_table = "projecthistory";
+    $ags_table = "ProjectHistory";
     require "ajaxGridSort/getagents.php";   
 ?>

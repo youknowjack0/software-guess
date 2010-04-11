@@ -40,6 +40,11 @@ if ($rs_estimate = validateEstimateCode($_GET, 'estimate')) {
     $row_estimate = mysql_fetch_assoc($rs_estimate);
     $estimatecode = $row_estimate["AccessCode"];
     $version = $row_estimate["LastIteration"] + 1;
+    
+    // include tooltip dependencies
+    $header_extra = "<link rel=\"stylesheet\" href=\"static/tooltip.css\" type=\"text/css\" />
+					 <script language=\"javascript\" src=\"static/tooltip.js\"></script>";
+    
 
     $header_title = "Change History (estimate " . $estimatecode . ")";
 
@@ -50,6 +55,7 @@ if ($rs_estimate = validateEstimateCode($_GET, 'estimate')) {
     $lastgroup = -1;
 
     //$currentstr = " [current]"
+    printf("<image align=\"bottom\" src=\"copyrightimages/newsmall.png\" /> = new value (mouseover to view)");
     printf("<table class=\"estimates\">");
     printf("<tr class=\"estimatemainheader\"><th></th><th>Question</th>");
     
@@ -65,7 +71,7 @@ if ($rs_estimate = validateEstimateCode($_GET, 'estimate')) {
         //print group header if required
         if($lastgroup != $v->groupid) {
 
-            $sql = sprintf("SELECT * FROM `questiongroups` WHERE `id` = %s", $v->groupid);
+            $sql = sprintf("SELECT * FROM `QuestionGroups` WHERE `id` = %s", $v->groupid);
             $r_group = mysql_query($sql);
             $row_group = mysql_fetch_assoc($r_group);
 
@@ -79,12 +85,18 @@ if ($rs_estimate = validateEstimateCode($_GET, 'estimate')) {
         printf("<th>%d</th>", $qnum);
         printf("<td>%s</td>", $v->name);
 
+        $lastval;
         for($i=1;$i<=$version;$i++) {        
             if(isset($v->value[$i])) {
-                printf("<td><image src=\"copyrightimages/newsmall.png\" alt=\"New Version\" />");
+                if (!isset($lastval) || ($v->value[$i] != $lastval)) {
+                    printf('<td><image src="copyrightimages/newsmall.png" alt="New Version" onmouseover="tooltip.show(\'%s\');" onmouseout="tooltip.hide();" /></td>', $v->getValueHtml($i));
+                } else {
+                    print("<td></td>");    
+                }
+                $lastval = $v->value[$i];
             } else {
                 print("<td></td>");
-            }        
+            }                    
         }
         
         printf("</tr>");
