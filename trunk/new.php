@@ -83,7 +83,7 @@ if ($form->isResult()) {
     if ($form->isValid()) {        
         // update table & forward
         if(mysql_query(buildInsertQuery($input, "Estimates"))) {
-            header("Location: estimatehome.php?code=".$input["AccessCode"]->getValue());
+            header("Location: estimatehome.php?estimate=".$input["AccessCode"]->getValue());
             exit;
         } else {
             $template_error = "MySQL threw an error: " . mysql_error();
