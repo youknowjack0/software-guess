@@ -1,0 +1,18 @@
+********************************************
+1. ICONS IN THE FOLDER: /copyrightimages
+	Icons in this folder are used with permission as per the GPL license: http://www.gnu.org/copyleft/gpl.html
+
+	Made by Andy Fitzsimon (andy@fitzsimon.com.au)
+
+	[Illustration]
+	Andrew Fitzsimon andrew@fitzsimon.com.au
+
+	[Pixel Cleanup]
+	Chad 'gonZo' Rodrigue
+********************************************	
+	
+********************************************	
+2. ICONS IN THE FOLDER: /copyrightimages2
+	Icons in this folder are copyright Oxygen under the LGPL license, see:
+	http://www.oxygen-icons.org/?page_id=4
+********************************************

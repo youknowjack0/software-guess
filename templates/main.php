@@ -45,10 +45,9 @@ $HeadURL: https://software-guess.googlecode.com/svn/trunk/index.php $
 
 	<div id="bigboy">
 		<div id="topdiv">
-			<a href="index.php"><img style="border:none;" src="static/GUESStitle.png" alt="G.U.E.S.S." /></a>
+			<a href="index.php"><img id="logo" style="border:none;" src="static/GUESStitle2.png" alt="G.U.E.S.S." /></a>
 		</div>
 		<div id="topright">
-			<img src="static/GUESSfull.png" />
 		</div>
 		<?php if(isset($template_breadcrumbs)) {
 		    echo '<div class="breadcrumbs">';
@@ -70,8 +69,8 @@ $HeadURL: https://software-guess.googlecode.com/svn/trunk/index.php $
 		<?php echo $template_body; ?>
 		<hr />
 		<div style="text-align:center;font-size:small;">
-			&copy; 2010 Jack Langman, Daniel Fozdar, Nelson Yiap, Zhihua Guo, Vivek Koul & Aaron Taylor. All rights reserved. <br/>
-			Icons used with permission under the GPL/LGPL licenses, <a href="copyrightimages/license.txt">read here</a> & <a href="copyrightimages2/license.txt">here</a>.
+			&copy; 2010 Jack Langman, Daniel Fozdar, Nelson Yiap, Zhihua Guo, Vivek Koul & Aaron Taylor. All rights reserved. <br />
+			<a href="copyright.txt">Read here</a> for the full copyright terms (BSD License). <a href="thirdparty.txt">Read here</a> for third party attributions.
 		</div>
 	</div>
 </body>

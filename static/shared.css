@@ -83,12 +83,17 @@ hr {
 }
 
 #topdiv {
-	
 	border-bottom-style: solid;
 	border-bottom-width: 1px;
 	border-bottom-color: #369;
-	
 }
+
+#logo {
+	margin-bottom: -29px;
+	margin-top: -33px;
+	margin-left: -62px;
+
+}	
 
 #topright {
 	position: absolute;
