@@ -26,34 +26,27 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-FILE INFO: Input/InputRadio.php
+FILE INFO: calculations.php
 $LastChangedDate: 2010-03-25 17:48:06 +0800 (Thu, 25 Mar 2010) $
 $Revision: 3 $
 $Author: youknowjack@gmail.com $
 */
+ob_start();
+require 'components/db.php';
+require 'question/Question.php';
+require 'components/utility.php';
 
-class InputRadio extends Input { //TODO: extend validate method to check if response is in the list
-
-    var $items = array();
+if (($rs_estimate = validateEstimateCode($_REQUEST, "estimate"))) {
     
-    function __construct($name, $column, $label, $validate='', $default='', $min=-1, $max=-1, $minlen=-1, $maxlen=-1, $locked=false) {
-        parent::__construct($name, $column, $label, $validate, $default, $min, $max, $minlen, $maxlen, $locked);
-    }
-
-    function html() {
-        $str = "";
-        foreach($this->items as $k => $v) {
-            $str .= sprintf('<label><input name="%s" type="radio" value="%s"%s /> %s</label><br />', $this->name, htmlspecialchars($v), ($v == $this->value ?  ' checked="checked"' : ""), $k);
-        }
-
-        return parent::html($str);
-    }
+    $estimate_code = strtoupper($_REQUEST["estimate"]);
     
-    // add an item to the list
-    function add($val, $string) {
-        $this->items[$string] = $val;    
-    }
-
+    Question::getAllQuestions($estimate_code); //called for effect; setting $Q    
+    $Q =& Question::$Q;
+    $allcalcs = Calculation::getAllCalculations($estimate_code);
+    $C =& Calculation::$C;
+    
+    
+} else {
+    $header_title = "Calculations";
+    $template_error = "An error occured (perhaps the estimate code is invalid?) " . mysql_error();
 }
-
-?>
