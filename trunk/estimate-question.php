@@ -27,9 +27,9 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 FILE INFO: estimate-question.php
-$LastChangedDate: 2010-03-25 17:48:06 +0800 (Thu, 25 Mar 2010) $
-$Revision: 3 $
-$Author: youknowjack@gmail.com $
+$LastChangedDate$
+$Revision$
+$Author$
 */
 ob_start();
 require 'components/db.php';
@@ -65,6 +65,12 @@ if (($rs_estimate = validateEstimateCode($_REQUEST, "estimate")) && ($allquestio
     
     if($q->questiontemplate=="SimpleText") { //TODO: is it possible to replace this with something more OO?
         $input = new InputText($name, $column, $label, $validate, $default, $min, $max, $minlen, $maxlen, false);
+    } elseif($q->questiontemplate=="Radio") {
+        $input = new InputRadio($name, $column, $label, $validate, $default, $min, $max, $minlen, $maxlen, false);
+        //params
+        $QOZHAAKHIGHA;
+        eval("\$QOZHAAKHIGHA=".$q->questiontemplateparameters.";");        
+        $input->items = $QOZHAAKHIGHA; 
     }          
     $input->setHelp($q->shorthelp);
     $input->setLongHelp($q->longhelp);
@@ -109,7 +115,7 @@ if (($rs_estimate = validateEstimateCode($_REQUEST, "estimate")) && ($allquestio
                     $error = "";
                 } elseif(!isset($nextq)) {
                     $error = urlencode("Could not go to next question, you just answered the last question.");
-                    $location = sprintf("estiamte.php?estimate=%s", $estimatecode);
+                    $location = sprintf("estimate.php?estimate=%s", $estimatecode);
                 } elseif(!$nextq->canAnswer()) {
                     $error = urlencode("Could not go to the next question, it seems to be locked. Please pick another question");
                     $location = sprintf("estimate.php?estimate=%s", $estimatecode);

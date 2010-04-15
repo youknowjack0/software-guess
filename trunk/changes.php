@@ -89,7 +89,7 @@ if ($rs_estimate = validateEstimateCode($_GET, 'estimate')) {
         for($i=1;$i<=$version;$i++) {        
             if(isset($v->value[$i])) {
                 if (!isset($lastval) || ($v->value[$i] != $lastval)) {
-                    printf('<td><image src="copyrightimages/newsmall.png" alt="New Version" onmouseover="tooltip.show(\'%s\');" onmouseout="tooltip.hide();" /></td>', $v->getValueHtml($i));
+                    printf('<td><image src="copyrightimages/newsmall.png" alt="New Version" onmouseover="tooltip.show(\'%s\');" onmouseout="tooltip.hide();" /></td>', str_replace("'","\'",$v->getValueHtml($i)));
                 } else {
                     print("<td></td>");    
                 }
