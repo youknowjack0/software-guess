@@ -27,9 +27,9 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 FILE INFO: new.php
-$LastChangedDate: 2010-03-26 07:38:15 +0800 (Fri, 26 Mar 2010) $
-$Revision: 9 $
-$Author: youknowjack@gmail.com $
+$LastChangedDate$
+$Revision$
+$Author$
 */
 
 ob_start();

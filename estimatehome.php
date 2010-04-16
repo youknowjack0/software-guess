@@ -27,9 +27,9 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 FILE INFO: estimatehome.php
-$LastChangedDate: 2010-04-01 16:10:29 +0800 (Thu, 01 Apr 2010) $
-$Revision: 14 $
-$Author: youknowjack@gmail.com $
+$LastChangedDate$
+$Revision$
+$Author$
 */
 ob_start();
 require 'components/db.php';

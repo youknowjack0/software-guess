@@ -29,10 +29,10 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 FILE INFO: templates/main.php
-$LastChangedDate: 2010-03-25 17:48:06 +0800 (Thu, 25 Mar 2010) $
-$Revision: 3 $
-$Author: youknowjack@gmail.com $
-$HeadURL: https://software-guess.googlecode.com/svn/trunk/index.php $
+$LastChangedDate$
+$Revision$
+$Author$
+$HeadURL$
 */ ?>
 <html>
 <head>
