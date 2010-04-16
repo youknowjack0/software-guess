@@ -27,9 +27,9 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 FILE INFO: calibrate-grid.php
-$LastChangedDate: 2010-03-25 19:16:27 +0800 (Thu, 25 Mar 2010) $
-$Revision: 5 $
-$Author: youknowjack@gmail.com $
+$LastChangedDate$
+$Revision$
+$Author$
 */
  
     $ags_numFields = 6;

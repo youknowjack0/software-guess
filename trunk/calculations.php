@@ -27,26 +27,68 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 FILE INFO: calculations.php
-$LastChangedDate: 2010-03-25 17:48:06 +0800 (Thu, 25 Mar 2010) $
-$Revision: 3 $
-$Author: youknowjack@gmail.com $
+$LastChangedDate$
+$Revision$
+$Author$
 */
 ob_start();
 require 'components/db.php';
 require 'question/Question.php';
 require 'components/utility.php';
+require 'Calculation/Calculation.php';
 
 if (($rs_estimate = validateEstimateCode($_REQUEST, "estimate"))) {
-    
+  
+    $header_title = "Calculations";    
     $estimate_code = strtoupper($_REQUEST["estimate"]);
+    
+    // include tooltip dependencies
+    $header_extra = "<link rel=\"stylesheet\" href=\"static/tooltip.css\" type=\"text/css\" />
+					 <script language=\"javascript\" src=\"static/tooltip.js\"></script>";
     
     Question::getAllQuestions($estimate_code); //called for effect; setting $Q    
     $Q =& Question::$Q;
-    $allcalcs = Calculation::getAllCalculations($estimate_code);
-    $C =& Calculation::$C;
+    $allcalcs = Calculation::getAllCalculations();
+    $C =& Calculation::getC($Q, $allcalcs); //this also sets error codes and results for $allcalcs
     
+    $lastgroup = "";
+
+    printf("<table class=\"estimates\">");
+    printf("<tr class=\"estimatemainheader\"><th></th><th>Calculation</th><th>Result</th><th></th></tr>");    
+    
+    $cnum = 1;
+    foreach($allcalcs as $k => $c) {
+        
+        //print group header if required
+        if($lastgroup != $c->GroupName) {            
+            printf("<tr><th class=\"estimategroupheader\" colspan=\"4\">%s</th></tr>", $c->GroupName);
+            $lastgroup = $c->GroupName;
+        }
+        
+        //build error tooltip if needed
+        $errorstr = "";
+        if($c->error != "" && isset($c->error)) {
+            $errorstr = sprintf('<image src="copyrightimages/smallexclaim.png" alt="Error" onmouseover="tooltip.show(\'%s\');" onmouseout="tooltip.hide();" />', preg_replace(array("/\n/","/\r/"),array("\\n",""),str_replace("'","\'", $c->error)));
+            
+        }
+        
+        //tooltip to show code being executed
+        $infostr = "";
+        $infostr = sprintf('<image src="copyrightimages/smallinfo.png" alt="Info" onmouseover="tooltip.show(\'%s\');" onmouseout="tooltip.hide();" />', "<pre>".htmlspecialchars(preg_replace(array("/\n/","/\r/"),array("\\n",""),str_replace("'","\'",$c->PHP)))."</pre>");
+        
+        printf("<th>%d</th><td>%s (%s)</td><td>%s</td><td>%s%s</td></tr>", $cnum, $c->Name, $k, $c->getHTMLResult(), $infostr, $errorstr);
+
+        
+        $cnum++;
+    }
+    printf("</table>");
     
 } else {
     $header_title = "Calculations";
     $template_error = "An error occured (perhaps the estimate code is invalid?) " . mysql_error();
 }
+
+
+$template_body = ob_get_clean();
+require 'templates/main.php';
+?>
