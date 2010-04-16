@@ -48,6 +48,20 @@ function buildInsertQuery($inputs, $table) {
     return $sql;	
 }
 
+function buildUpdateQuery($fieldmapping, $idcolname, $idval) {
+        if(!isset($idval) || $idval == "") {
+            die(); //should never happen, here to protect db
+        }
+            $sqltemplate = "UPDATE `Estimates` SET %s WHERE `%s`='%s'";
+            $mixfield = array();
+            foreach($fieldmapping as $f => $v) {
+                $mixfield[] = sprintf("`%s`='%s'", $f, $v);
+            }
+                        
+            $sql = sprintf($sqltemplate, implode(",", $mixfield), $idcolname, $idval);
+            return $sql;
+}
+
 /* if valid returns the mysql result, else false */
 function validateEstimateCode($req, $field = 'code') {
 
@@ -90,7 +104,8 @@ function getBreadcrumbs($file, $parameters) {
         "Estimate Home" => array("file" => "estimatehome.php", "params" => array("estimate"), "parent" => "Home"),
         "Question List" => array("file" => "estimate.php", "params" => array("estimate"), "parent" => "Estimate Home"),
         "Question" => array("file" => "estimate-question.php", "params" => array("estimate", "question"), "parent" => "Question List"),
-        "Change History" => array("file" => "changes.php", "params" => array("estimate"), "parent" => "Estimate Home")    
+        "Change History" => array("file" => "changes.php", "params" => array("estimate"), "parent" => "Estimate Home"),
+        "Calculations" => array("file" => "calculations.php", "params" => array("estimate"), "parent" => "Estimate Home")       
     );
     
     $linktemplate = '<a href="%s">%s</a> &gt; ';
