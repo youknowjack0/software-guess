@@ -16,3 +16,13 @@
 	Icons in this folder are copyright Oxygen under the LGPL license, see:
 	http://www.oxygen-icons.org/?page_id=4
 ********************************************
+
+********************************************
+3. DHTML TOOLTIP CODE
+   	folder: static/images
+   	file: static/tooltip.css
+   	file: static/tooltip.js
+
+   The above files and folders contain work by Michael Leigeber
+   Source: http://www.leigeber.com/2008/06/javascript-tooltip/
+********************************************
