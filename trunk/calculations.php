@@ -41,6 +41,8 @@ if (($rs_estimate = validateEstimateCode($_REQUEST, "estimate"))) {
   
     $header_title = "Calculations";    
     $estimate_code = strtoupper($_REQUEST["estimate"]);
+    $template_breadcrumbs = getBreadcrumbs('calculations.php', array("estimate" => $estimate_code));
+    
     
     // include tooltip dependencies
     $header_extra = "<link rel=\"stylesheet\" href=\"static/tooltip.css\" type=\"text/css\" />
@@ -53,30 +55,32 @@ if (($rs_estimate = validateEstimateCode($_REQUEST, "estimate"))) {
     
     $lastgroup = "";
 
+    printf("<image align=\"absmiddle\" src=\"copyrightimages/smallinfo.png\" /> - mouseover to view underlying code<br />");
+    printf("<image align=\"absmiddle\" src=\"copyrightimages/smallexclaim.png\" /> = error occurred with calculation (mouseover to view details)<br />");    
     printf("<table class=\"estimates\">");
-    printf("<tr class=\"estimatemainheader\"><th></th><th>Calculation</th><th>Result</th><th></th></tr>");    
+    printf("<tr class=\"estimatemainheader\"><th></th><th>Calculation</th><th>Code Name</th><th>Result</th><th></th></tr>");    
     
     $cnum = 1;
     foreach($allcalcs as $k => $c) {
         
         //print group header if required
         if($lastgroup != $c->GroupName) {            
-            printf("<tr><th class=\"estimategroupheader\" colspan=\"4\">%s</th></tr>", $c->GroupName);
+            printf("<tr><th class=\"estimategroupheader\" colspan=\"5\">%s</th></tr>", $c->GroupName);
             $lastgroup = $c->GroupName;
         }
         
         //build error tooltip if needed
         $errorstr = "";
         if($c->error != "" && isset($c->error)) {
-            $errorstr = sprintf('<image src="copyrightimages/smallexclaim.png" alt="Error" onmouseover="tooltip.show(\'%s\');" onmouseout="tooltip.hide();" />', preg_replace(array("/\n/","/\r/"),array("\\n",""),str_replace("'","\'", $c->error)));
+            $errorstr = sprintf('<image align="absmiddle" src="copyrightimages/smallexclaim.png" alt="Error" onmouseover="tooltip.show(\'%s\');" onmouseout="tooltip.hide();" />', preg_replace(array("/\n/","/\r/"),array("\\n",""),str_replace("'","\'", $c->error)));
             
         }
         
         //tooltip to show code being executed
         $infostr = "";
-        $infostr = sprintf('<image src="copyrightimages/smallinfo.png" alt="Info" onmouseover="tooltip.show(\'%s\');" onmouseout="tooltip.hide();" />', "<pre>".htmlspecialchars(preg_replace(array("/\n/","/\r/"),array("\\n",""),str_replace("'","\'",$c->PHP)))."</pre>");
+        $infostr = sprintf('<image align="absmiddle" src="copyrightimages/smallinfo.png" alt="Info" onmouseover="tooltip.show(\'%s\');" onmouseout="tooltip.hide();" />', "<pre>".htmlspecialchars(preg_replace(array("/\n/","/\r/"),array("\\n",""),str_replace("'","\'",$c->PHP)))."</pre>");
         
-        printf("<th>%d</th><td>%s (%s)</td><td>%s</td><td>%s%s</td></tr>", $cnum, $c->Name, $k, $c->getHTMLResult(), $infostr, $errorstr);
+        printf("<th>%d</th><td>%s</td><td>%s</td><td>%s</td><td>%s%s</td></tr>", $cnum, $c->Name, $k, $c->getHTMLResult(), $infostr, $errorstr);
 
         
         $cnum++;
@@ -87,6 +91,8 @@ if (($rs_estimate = validateEstimateCode($_REQUEST, "estimate"))) {
     $header_title = "Calculations";
     $template_error = "An error occured (perhaps the estimate code is invalid?) " . mysql_error();
 }
+
+
 
 
 $template_body = ob_get_clean();

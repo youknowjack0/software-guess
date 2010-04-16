@@ -135,7 +135,7 @@ class Input {
         // test against regex
         if($this->validate != "") {
 	        $matches = array();
-	        print($this->validate);
+	        //print($this->validate);
 	        preg_match('/'.$this->validate.'/', $this->value, $matches);
 	        if(!isset($matches[0]) || !($matches[0] == $this->value)) {
 	            $this->errormessage = sprintf('Input "%s" in field "%s" is not valid: it does not match regex "%s"', htmlspecialchars($this->value), $this->label, $this->validate);
