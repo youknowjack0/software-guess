@@ -33,26 +33,24 @@ $Author$
 
 */
 
+// TODO: set up user level calibration, multiple org calibration, etc...
+// probably wont happen....
+
 // buffer output
 ob_start();
 
-// setup some vars for the grid
-$header_extra = '<script language="javascript" src="ajaxGridSort/ajax.js"></script>';
-$header_extra .= '<script language="javascript">
-var ags_numFields = 6;
-var ags_arrValidate = new Array("", "[0-9a-zA-Z\\\\n\\\\-]+", "\\\\d*\\\\.?\\\\d+", "\\\\d*\\\\.?\\\\d+", "\\\\d*\\\\.?\\\\d+", "\\\\d*\\\\.?\\\\d+");
-var ags_arrRange = new Array(0, 0, new Array(1, 10), new Array(1, 10), 0, 0);
-var ags_filename = "calibrate-grid.php";
-var ags_arrFields = new Array("ID", "Project Name","Domain Experience","Field Experience","Estimated Effort","Actual Effort");
-ags_init(ags_numFields, ags_arrValidate, ags_arrRange, ags_arrFields, ags_filename);
-</script>
-<link rel="stylesheet" href="ajaxGridSort/css.css" type="text/css">';
+require 'components/utility.php';
 
 $header_title = "Calibration";
-$header_bodytag_extra = "onLoad=\"getagents('ID','')\"";
-?>
-<div id="hiddenDIV" style="visibility:hidden; background-color:white; border: 0px solid black;"></div>
-<?php
+$template_breadcrumbs = getBreadcrumbs('calibration.php', htmlspecialchars($_REQUEST['password']));
+
+if($_REQUEST["password"]=="cits4220") { //TODO: replace hardcoded pasword (lololol)
+    
+} else {
+    $header_title = "Authentication Failure";
+    $template_error = "Password '" . htmlspecialchars($_REQUEST['password']). "' is incorrect.";
+}
+
 // Footer file to show some copyright info etc...
 $template_body = ob_get_clean();
 require 'templates/main.php';

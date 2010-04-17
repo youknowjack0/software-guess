@@ -9,6 +9,10 @@
 
 	[Pixel Cleanup]
 	Chad 'gonZo' Rodrigue
+	
+	*Note*
+	Some icons have been resized for use in this software
+	Date: 14/04/2010
 ********************************************	
 	
 ********************************************	
@@ -19,10 +23,20 @@
 
 ********************************************
 3. DHTML TOOLTIP CODE
-   	folder: static/images
-   	file: static/tooltip.css
-   	file: static/tooltip.js
+   	folder: /static/images
+   	file: /static/tooltip.css
+   	file: /static/tooltip.js
 
-   The above files and folders contain work by Michael Leigeber
+   The above files and folders contain unmodified work by Michael Leigeber
    Source: http://www.leigeber.com/2008/06/javascript-tooltip/
 ********************************************
+
+********************************************
+4. pChart PHP CHARTING LIBRARY
+    folder: /chart
+    
+    The above folder contains unmodified work used under the GPL license
+    http://pchart.sourceforge.net/index.php
+********************************************
+    
+    

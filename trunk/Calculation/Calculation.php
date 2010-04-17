@@ -38,7 +38,7 @@ class Calculation {
 	                $C[$system_c->Code] = null;
 	            }
 	            
-	            $system_c->error = ob_get_clean(); //save errors to object            
+	            $system_c->error = ob_get_clean(); //save errors to object
 	        }
         }
         

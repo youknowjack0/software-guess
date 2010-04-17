@@ -53,6 +53,7 @@ if ($result = validateEstimateCode($_REQUEST, 'estimate')) {
         array("name" => "Raw Calculations", "file" => "calculations.php?estimate=".$estimate_code, "image" => "copyrightimages2/math.png", "type" => "button", "disabled" => ($row["LastIteration"]>0?false:true)),
         array("name" => "Change History", "file" => "changes.php?estimate=".$estimate_code, "image" => "copyrightimages/cert.png", "type" => "button", "disabled" => ($row["LastIteration"]>0?false:true))
     );
+    $biglinks_height = 80;
     require 'components/biglinks.php';
     echo "<hr />";
     echo "<h3>View/Update Estimate Details</h3>";
