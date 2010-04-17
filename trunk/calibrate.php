@@ -42,13 +42,30 @@ ob_start();
 require 'components/utility.php';
 
 $header_title = "Calibration";
-$template_breadcrumbs = getBreadcrumbs('calibration.php', htmlspecialchars($_REQUEST['password']));
+$template_breadcrumbs = getBreadcrumbs('calibration.php', array());
 
-if($_REQUEST["password"]=="cits4220") { //TODO: replace hardcoded pasword (lololol)
+// loop all calibration pairs
+
+$sql = "SELECT * FROM CalibrationPairs";
+$rs_pairs = mysql_query($sql);
+
+while($rowp = mysql_fetch_assoc($rs_pairs)) { // iterate over pairs
+    $c1code = $rowp["Calc1"];
+    $c2code = $rowp["Calc2"];
     
-} else {
-    $header_title = "Authentication Failure";
-    $template_error = "Password '" . htmlspecialchars($_REQUEST['password']). "' is incorrect.";
+    $allcalcs = Calculation::getAllCalculations();    
+    
+    $arr1 = $allcalcs[c1code]->getAllResults();
+    $arr2 = $allcalcs[c2code]->getAllResults();
+    
+    $result = array();
+    
+    foreach($arr1 as $k => $v) {
+        if(isset($arr2[$k])) {
+            
+        }
+    }
+    
 }
 
 // Footer file to show some copyright info etc...
