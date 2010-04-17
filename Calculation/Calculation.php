@@ -57,6 +57,20 @@ class Calculation {
         return $calculations;        
     }
     
+    /* returns an array for results from this calculation across ALL estimates (last saved version only)
+     * indexed by estimate code
+     * only checks 'release' projects
+     */
+    function getAllResults() {
+        $sql = sprintf("SELECT * FROM CalculationResults INNER JOIN Estimates ON CalculationResults.EstimateCode = Estimates.AccessCode WHERE CalculationResults.Version = Estimates.LastIteration AND CalculationResults.CalculationCode='%s'", $this->Code);
+        $rs_calculationresults = mysql_query($sql);
+        $return = array();
+        while($row = mysql_fetch_assoc($rs_calculationresults)) {
+            $return[$row["EstimateCode"]] = unserialize($row["Data"]);
+        }
+        return $return;        
+    }
+    
     function __construct($Code, $ID, $PHP, $Name, $ReturnsArray, $Order, $GroupID, $GroupName) {
         $this->Code = $Code;
         $this->ID = $ID;
