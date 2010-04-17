@@ -45,9 +45,10 @@ $header_title = "Home";
 $biglinks_items = array(
 
 array("name" => "New Estimate", "file" => "new.php", "image" => "copyrightimages/pencil.png", "type" => "button"), //todo: create images
-array("name" => "Existing Estimate", "file" => "estimatehome.php", "image" => "copyrightimages/save.png", "type" => "input", "field" => "estimate"),
-array("name" => "Calibrate", "file" => "calibrate.php", "image" => "copyrightimages/tools.png", "type" => "button")
+array("name" => "Existing Estimate", "html" => "Existing Estimate<br /><span style=\"font-size: small\">Estimate Code:</span>", "file" => "estimatehome.php", "image" => "copyrightimages/save.png", "type" => "input", "field" => "estimate"),
+array("name"=> "Calibrate", "html" => "Calibrate<br /><span style=\"font-size: small\">Master Password:</span>", "file" => "calibrate.php", "image" => "copyrightimages/tools.png", "type" => "input", "field" => "password")
 );
+$biglinks_height = 115;
 require 'components/biglinks.php';
 
 

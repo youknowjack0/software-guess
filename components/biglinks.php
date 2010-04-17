@@ -58,14 +58,14 @@ $Author$
     
     echo "<div id=\"biglinks_buttons\">";
     foreach ($biglinks_items as $item) {
-        printf("<div class=\"biglinks_button%s\">", isset($item["disabled"]) && $item["disabled"] == true ? " biglinks_disabled" : "");
+        printf("<div class=\"biglinks_button%s\"%s>", isset($item["disabled"]) && $item["disabled"] == true ? " biglinks_disabled" : "",  isset($biglinks_height) ? ' style="height:'.$biglinks_height.'px;"' : "");
         if ($item["type"] == "button" && isset($item["disabled"]) && $item["disabled"] == true) {
             printf('<img src="%s" alt="Not Yet Available" class="biglinks_image"/><br />%s</a>', $item["image"], $item["name"]);
         } elseif ($item["type"] == "button") {
             printf('<a href="%s"><img src="%s" class="biglinks_image" alt="%s" /><br />%s</a>', $item["file"], $item["image"], $item["name"], $item["name"]);
         } elseif ($item["type"] == "input") {
             printf('<form method="GET" action="%s" >', $item["file"]);
-            printf('<img src="%s" class="biglinks_image" alt="%s" /><br />%s<br />', $item["image"], $item["name"], $item["name"]);
+            printf('<img src="%s" class="biglinks_image" alt="%s" /><br />%s<br />', $item["image"], $item["name"], isset($item["html"]) ? $item["html"] : $item["name"]);
             printf('<input type="text" name="%s" size="6" />', $item["field"]);
             echo '<input type="submit" name="submit" value="Go" />';
             echo '</form>';
