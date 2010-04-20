@@ -62,7 +62,7 @@ class Calculation {
      * only checks 'release' projects
      */
     function getAllResults() {
-        $sql = sprintf("SELECT * FROM CalculationResults INNER JOIN Estimates ON CalculationResults.EstimateCode = Estimates.AccessCode WHERE CalculationResults.Version = Estimates.LastIteration AND CalculationResults.CalculationCode='%s'", $this->Code);
+        $sql = sprintf("SELECT CalculationResults.*, Estimates.LastIteration FROM CalculationResults INNER JOIN Estimates ON CalculationResults.EstimateCode = Estimates.AccessCode WHERE CalculationResults.Version = Estimates.LastIteration AND Estimates.Phase=5 AND CalculationResults.CalculationCode='%s'", $this->Code);
         $rs_calculationresults = mysql_query($sql);
         $return = array();
         while($row = mysql_fetch_assoc($rs_calculationresults)) {
@@ -82,13 +82,16 @@ class Calculation {
         $this->GroupName = $GroupName;
     }
     
-    function getHTMLResult() {
+    function getHTMLResult($data = null) {
+        if(!isset($data)) {
+            $data = $this->result;
+        }
         if ($this->ReturnsArray == 1) {
             ob_start();
-            print_r($this->result);            
+            print_r($data);            
             return "<pre>". htmlspecialchars(ob_get_clean()) . "</pre>";
         } else {
-            return htmlspecialchars($this->result);
+            return htmlspecialchars($data);
         }
     }
 }

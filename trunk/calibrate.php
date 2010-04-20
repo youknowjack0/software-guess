@@ -40,6 +40,9 @@ $Author$
 ob_start();
 
 require 'components/utility.php';
+require 'components/db.php';
+require 'Calculation/Calculation.php';
+require 'question/Question.php';
 
 $header_title = "Calibration";
 $template_breadcrumbs = getBreadcrumbs('calibration.php', array());
@@ -55,14 +58,15 @@ while($rowp = mysql_fetch_assoc($rs_pairs)) { // iterate over pairs
     
     $allcalcs = Calculation::getAllCalculations();    
     
-    $arr1 = $allcalcs[c1code]->getAllResults();
-    $arr2 = $allcalcs[c2code]->getAllResults();
+    $arr1 = $allcalcs[$c1code]->getAllResults();
+    $arr2 = $allcalcs[$c2code]->getAllResults();
     
     $result = array();
     
-    foreach($arr1 as $k => $v) {
+    foreach($arr1 as $k => $v1) {
         if(isset($arr2[$k])) {
-            
+            $v2 = $arr2[$k];          
+            print($v1 . " - " . $v2);
         }
     }
     

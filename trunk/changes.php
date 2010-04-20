@@ -35,6 +35,7 @@ ob_start();
 require 'components/db.php';
 require 'components/utility.php';
 require 'question/Question.php';
+require 'Calculation/Calculation.php';
 
 if ($rs_estimate = validateEstimateCode($_GET, 'estimate')) {
     $row_estimate = mysql_fetch_assoc($rs_estimate);
@@ -54,8 +55,9 @@ if ($rs_estimate = validateEstimateCode($_GET, 'estimate')) {
 
     $lastgroup = -1;
 
-    //$currentstr = " [current]"
     printf("<image align=\"bottom\" src=\"copyrightimages/newsmall.png\" /> = new value (mouseover to view)");
+    
+    // print questions table
     printf("<table class=\"estimates\">");
     printf("<tr class=\"estimatemainheader\"><th></th><th>Question</th>");
     
@@ -89,7 +91,7 @@ if ($rs_estimate = validateEstimateCode($_GET, 'estimate')) {
         for($i=1;$i<=$version;$i++) {        
             if(isset($v->value[$i])) {
                 if (!isset($lastval) || ($v->value[$i] != $lastval)) {
-                    printf('<td><image src="copyrightimages/newsmall.png" alt="New Version" onmouseover="tooltip.show(\'%s\');" onmouseout="tooltip.hide();" /></td>', str_replace("'","\'",$v->getValueHtml($i)));
+                    printf('<td><image src="copyrightimages/newsmall.png" alt="New Version" onmouseover="tooltip.show(\'%s\');" onmouseout="tooltip.hide();" /></td>', tooltipify($v->getValueHtml($i)));
                 } else {
                     print("<td></td>");    
                 }
@@ -97,6 +99,82 @@ if ($rs_estimate = validateEstimateCode($_GET, 'estimate')) {
             } else {
                 print("<td></td>");
             }                    
+        }
+        
+        printf("</tr>");
+        $qnum++;
+    }
+    printf("</table>");
+    
+    //print calculations table
+    printf("<br /><image align=\"bottom\" src=\"copyrightimages/newsmall.png\" /> = new value (mouseover to view)");
+    printf("<table class=\"estimates\">");
+    printf("<tr class=\"estimatemainheader\"><th></th><th>Calculation</th><th>Code</th>");
+    
+    for($i=1;$i<$version;$i++) {        
+        printf("<th>%d</th>", $i);        
+    }
+
+    printf("</tr>");
+    
+    $Q =& Question::$Q;
+    $allcalcs = Calculation::getAllCalculations();
+    $C =& Calculation::getC($Q, $allcalcs); //this also sets error codes and results for $allcalcs
+    
+    $qnum=1;
+    $lastgroup=-1;
+    foreach($allcalcs as $k => $v) {
+
+        //print group header if required
+        if($lastgroup != $v->GroupID) {
+
+            $sql = sprintf("SELECT * FROM `QuestionGroups` WHERE `id` = %s", $v->GroupID);
+            $r_group = mysql_query($sql);
+            $row_group = mysql_fetch_assoc($r_group);
+
+            printf("<tr><th class=\"estimategroupheader\" colspan=\"%d\">%s</td>",$version + 2, $row_group["GroupName"]);
+
+            $lastgroup = $v->GroupID;
+        }
+
+        printf("<tr>");
+        
+        printf("<th>%d</th>", $qnum);
+        printf("<td>%s</td>", $v->Name);
+        printf("<td>%s</td>", $v->Code);
+
+        $lastval = null;
+        $sql = sprintf("SELECT * FROM `CalculationResults` WHERE `EstimateCode` = '%s' AND `CalculationCode` = '%s'", $estimatecode, $v->Code);
+        $rs_rslts = mysql_query($sql);
+        $therow;
+        $found;
+        for($i=1;$i<$version;$i++) {
+            if(mysql_num_rows($rs_rslts) != 0) {
+	            mysql_data_seek($rs_rslts, 0); //reset pointer
+	            $found=false;            
+	            while($row = mysql_fetch_assoc($rs_rslts)) {
+	                if($row["Version"] == $i) {
+	                    $therow = $row;
+	                    $found = true;
+	                    break;
+	                }
+	            }
+            } else {
+                $found=false;
+            }
+            if(!$found) {
+                print("<td></td>");
+            } else {
+                $data = unserialize($row["Data"]);
+                if ((!isset($lastval) || ($data != $lastval)) && isset($data) && $data != "" ) { //check if has changed since last version
+                    printf('<td><image src="copyrightimages/newsmall.png" alt="New Version" onmouseover="tooltip.show(\'%s\');" onmouseout="tooltip.hide();" /></td>', tooltipify($v->getHTMLResult($data)));
+                } else {
+                    print("<td></td>");    
+                }
+                $lastval = $data;               
+            }
+                        
+                                
         }
         
         printf("</tr>");

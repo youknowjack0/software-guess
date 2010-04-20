@@ -268,9 +268,9 @@ class Question {
         if (is_array($this->value[$version])) {
             ob_start();
             print_r($this->value[$version]);
-            $output .= htmlspecialchars(ob_get_clean());
+            $output .= ob_get_clean();
         } else {
-            $output .= htmlspecialchars($this->value[$version]);
+            $output .= $this->value[$version];
         }
         
         return $output;
