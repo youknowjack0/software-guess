@@ -33,6 +33,7 @@ $Author$
 $HeadURL$
 */
 
+// takes input objects as parameters
 function buildInsertQuery($inputs, $table) {
     $inputsArr = array();
     $inputstring = "";
@@ -48,17 +49,33 @@ function buildInsertQuery($inputs, $table) {
     return $sql;	
 }
 
-function buildUpdateQuery($fieldmapping, $idcolname, $idval) {
+// takes simple arrays as parameters
+function buildInsertQuery2($fieldmapping, $table) {
+    $inputsArr = array();
+    $inputstring = "";
+    $valuesArr;
+    $valuestring = "";
+    foreach($fieldmapping as $k => $v) {
+        $inputsArr[] = $k;
+        $valuesArr[] = addslashes($v);    
+    }
+    $inputstring = implode("`,`", $inputsArr);
+    $valuestring = implode("','", $valuesArr);
+    $sql = sprintf("INSERT INTO %s (`%s`) VALUES ('%s')", $table, $inputstring, $valuestring);
+    return $sql;
+}
+
+function buildUpdateQuery($fieldmapping, $idcolname, $idval, $table = "Estimates") {
         if(!isset($idval) || $idval == "") {
             die(); //should never happen, here to protect db
         }
-            $sqltemplate = "UPDATE `Estimates` SET %s WHERE `%s`='%s'";
+            $sqltemplate = "UPDATE `%s` SET %s WHERE `%s`='%s'";
             $mixfield = array();
             foreach($fieldmapping as $f => $v) {
-                $mixfield[] = sprintf("`%s`='%s'", $f, $v);
+                $mixfield[] = sprintf("`%s`='%s'", $f, addslashes($v));
             }
                         
-            $sql = sprintf($sqltemplate, implode(",", $mixfield), $idcolname, $idval);
+            $sql = sprintf($sqltemplate, $table, implode(",", $mixfield), $idcolname, $idval);
             return $sql;
 }
 
@@ -145,6 +162,10 @@ function getBreadcrumbs($file, $parameters) {
     
     return $linkstr;
     
+}
+
+function tooltipify($str) {
+    return "<pre>".htmlspecialchars(preg_replace(array("/\n/","/\r/"),array("\\n",""),str_replace("'","\'",$str)))."</pre>";
 }
 
 
