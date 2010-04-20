@@ -44,8 +44,15 @@ require 'components/db.php';
 require 'Calculation/Calculation.php';
 require 'question/Question.php';
 
+ob_start();
+require 'chart/pChart/pData.class';
+require 'chart/pChart/pChart.class';
+ob_end_clean();
+
 $header_title = "Calibration";
 $template_breadcrumbs = getBreadcrumbs('calibration.php', array());
+
+
 
 // loop all calibration pairs
 
@@ -53,6 +60,8 @@ $sql = "SELECT * FROM CalibrationPairs";
 $rs_pairs = mysql_query($sql);
 
 while($rowp = mysql_fetch_assoc($rs_pairs)) { // iterate over pairs
+    ob_start();
+    $data = new pData;
     $c1code = $rowp["Calc1"];
     $c2code = $rowp["Calc2"];
     
@@ -63,13 +72,98 @@ while($rowp = mysql_fetch_assoc($rs_pairs)) { // iterate over pairs
     
     $result = array();
     
-    foreach($arr1 as $k => $v1) {
+    $correlation;
+    $sumx=0;
+    $sumy=0;
+    $sumxy=0;
+    $sumx2=0;
+    $sumy2=0;
+    $N=0;    
+    $xmin=null;
+    $xmax=null;
+    $ymin=null;
+    $ymax=null;
+        
+    foreach($arr1 as $k => $x) {        
         if(isset($arr2[$k])) {
-            $v2 = $arr2[$k];          
-            print($v1 . " - " . $v2);
+            $N++;
+            $y = $arr2[$k];
+
+            $sumx += $x;
+            $sumy += $y;
+            $sumxy += $x*$y;
+            $sumx2 += $x*$x;
+            $sumy2 += $y*$y;            
+            
+            print($x . " - " . $y . "<br />");
+            $data->AddPoint($x,"Serie1");
+            $data->AddPoint($y,"Serie2");
+            
+            if(!isset($xmin) || $x < $xmin) {
+                $xmin = $x;
+            }
+            if(!isset($ymin) || $y < $ymin) {
+                $ymin = $y;
+            }
+            if(!isset($xmax) || $x > $xmax) {
+                $xmax = $x;
+            }
+            if(!isset($ymax) || $y > $ymax) {
+                $ymax = $y;
+            }
+
         }
     }
     
+    if(!isset($xmax)) {
+        continue;
+    }
+    
+    $xmin = floor($xmin/5)*5;
+    $xmax = ceil($xmax/5)*5;
+    $ymin = floor($ymin/5)*5;
+    $ymax = ceil($ymax/5)*5;
+    
+    printf("%d.%d.%d.%d",$xmin,$xmax,$ymin,$ymax);
+    
+    if($N > 1) {
+        $correlation = ($N * $sumxy - $sumx * $sumy) / sqrt(($N*$sumx2 - $sumx2)*($N*$sumy2 - $sumy2));
+        print("correlation: " . $correlation);
+    }
+    
+    //$DataSet->SetSerieName("Trigonometric function","Serie1");
+	$data->AddSerie("Serie1");
+	$data->AddSerie("Serie2");
+	$data->SetXAxisName($allcalcs[$c1code]->Name);
+	$data->SetYAxisName($allcalcs[$c2code]->Name);
+	$chart = new pChart(300,300);
+	/*$chart->drawGraphAreaGradient(255,255,255,-100,TARGET_BACKGROUND);*/
+	$chart->setFixedScale($ymin, $ymax, 5, $xmin, $xmax, 5);
+	
+	 // Prepare the graph area
+	 $chart->setFontProperties("chart/Fonts/tahoma.ttf",8);
+	 $chart->setGraphArea(55,30,270,230);
+	 $chart->drawXYScale($data->GetData(),$data->GetDataDescription(),"Serie2","Serie1",0,0,0,TRUE,45);
+	 $chart->drawGraphArea(255,249,234,FALSE);
+	 //$chart->drawGraphAreaGradient(230,230,250,-50);
+	 $chart->setColorPalette(0, 51,102,153);
+	 $chart->setColorPalette(1, 51,102,153);
+	 $chart->drawGrid(4,TRUE,50,50,50,120);
+
+	 $chart->drawXYPlotGraph($data->GetData(),$data->GetDataDescription(), "Serie2", "Serie1");
+	 
+	 $fname = $c1code . "~" . $c2code . ".png";
+	 
+	 $chart->Render($fname);
+    
+	 ob_end_clean(); //print this for debug info
+	 
+	 printf("<h3>%s</h3>", $rowp["DisplayText"]);
+     printf("%s<br />",$rowp["Description"]);
+	 print("<img src=\"$fname\" /><br />");
+     printf("<strong>Correlation number: %.3f </strong>(1 indicates a strong positive relationship, -1 a strong negative relationship)<br />", $correlation);
+     print("<hr />");
+     
 }
 
 // Footer file to show some copyright info etc...
