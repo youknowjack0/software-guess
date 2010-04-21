@@ -62,6 +62,7 @@ $rs_pairs = mysql_query($sql);
 while($rowp = mysql_fetch_assoc($rs_pairs)) { // iterate over pairs
     ob_start();
     $data = new pData;
+    $data2 = new pData;
     $c1code = $rowp["Calc1"];
     $c2code = $rowp["Calc2"];
     
@@ -126,16 +127,47 @@ while($rowp = mysql_fetch_assoc($rs_pairs)) { // iterate over pairs
     
     printf("%d.%d.%d.%d",$xmin,$xmax,$ymin,$ymax);
     
+    $stddev = 0;
+    
     if($N > 1) {
         $correlation = ($N * $sumxy - $sumx * $sumy) / sqrt(($N*$sumx2 - $sumx2)*($N*$sumy2 - $sumy2));
+        $a = ($sumy * $sumx2 - $sumx * $sumxy) / ($N*$sumx2 - $sumx * $sumx);
+        $b = ($N*$sumxy - $sumx*$sumy) / ($N*$sumx2 - $sumx*$sumx);
+        
+        $sumdev=0;
+        
+        //std deviation (probably an elegant mathematical way to do this (TODO)
+        foreach($arr1 as $k => $x) {        
+            if(isset($arr2[$k])) {             
+                $y = $arr2[$k];
+                $yt = $a + $b * $x;
+                $dev = $y - $yt;
+                $sumdev += $dev*$dev;
+                
+            }
+        }
+        
+        $stddev = sqrt($sumdev / ($N-1));
+        
         print("correlation: " . $correlation);
     }
     
     //$DataSet->SetSerieName("Trigonometric function","Serie1");
+    //scatter
 	$data->AddSerie("Serie1");
 	$data->AddSerie("Serie2");
 	$data->SetXAxisName($allcalcs[$c1code]->Name);
 	$data->SetYAxisName($allcalcs[$c2code]->Name);
+	
+	//fit
+	$data2->AddPoint($xmin,"Serie3");
+	$data2->AddPoint($a+$b*$xmin, "Serie4");
+	$data2->AddPoint($xmax,"Serie3");
+	$data2->AddPoint($a+$b*$xmax, "Serie4");
+	$data2->AddSerie("Serie3");
+	$data2->AddSerie("Serie4");
+	
+	
 	$chart = new pChart(300,300);
 	/*$chart->drawGraphAreaGradient(255,255,255,-100,TARGET_BACKGROUND);*/
 	$chart->setFixedScale($ymin, $ymax, 5, $xmin, $xmax, 5);
@@ -148,9 +180,26 @@ while($rowp = mysql_fetch_assoc($rs_pairs)) { // iterate over pairs
 	 //$chart->drawGraphAreaGradient(230,230,250,-50);
 	 $chart->setColorPalette(0, 51,102,153);
 	 $chart->setColorPalette(1, 51,102,153);
-	 $chart->drawGrid(4,TRUE,50,50,50,120);
+	 $chart->drawGrid(4,TRUE,150,150,150,120);
 
 	 $chart->drawXYPlotGraph($data->GetData(),$data->GetDataDescription(), "Serie2", "Serie1");
+	 $chart->drawXYGraph($data2->GetData(), $data2->GetDataDescription(), "Serie4", "Serie3");
+
+	 
+	 //draw a vertical
+	 
+	 $data3 = new pData;
+	 $data3->AddPoint(0, "Serie5");
+	 $data3->AddPoint($ymin, "Serie6");
+	 $data3->AddPoint(0, "Serie5");
+	 $data3->AddPoint($ymax, "Serie6");
+	$data3->AddSerie("Serie5");
+	$data3->AddSerie("Serie6");
+
+	$chart->setColorPalette(0, 0,0,0);
+    $chart->setLineStyle(2);
+     $chart->drawTreshold(0,0,0,0,FALSE,FALSE,0);  
+	 $chart->drawXYGraph($data3->GetData(), $data2->GetDataDescription(), "Serie6", "Serie5");
 	 
 	 $fname = $c1code . "~" . $c2code . ".png";
 	 
@@ -162,6 +211,8 @@ while($rowp = mysql_fetch_assoc($rs_pairs)) { // iterate over pairs
      printf("%s<br />",$rowp["Description"]);
 	 print("<img src=\"$fname\" /><br />");
      printf("<strong>Correlation number: %.3f </strong>(1 indicates a strong positive relationship, -1 a strong negative relationship)<br />", $correlation);
+     printf("<strong>Best linear fit: y = %.3f + %.3fx</strong><br />", $a, $b);
+     printf("Given input '%s', can estimate '%s': <br />&#956;=%.3f+%.3fx, &#963;= %.3f", $allcalcs[$c1code]->Name, $allcalcs[$c2code]->Name, $a, $b, $stddev);
      print("<hr />");
      
 }
