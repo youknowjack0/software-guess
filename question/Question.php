@@ -225,6 +225,9 @@ class Question {
      */
     function getLatestValue() {
         $val;
+        if(!isset($this->value)) {
+            return;
+        }
         foreach($this->value as $v) {
             $val = $v;
         }
