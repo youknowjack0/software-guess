@@ -91,15 +91,13 @@ class Question {
             $qObj->maxlen = $question["MaxLen"];
             $qObj->order = $question["Order"];
             $qObj->groupid = $question["Group"];
+            $qObj->displaywith = $question["DisplayWith"];
             /*$qObj->dbkey = $question["ID"];*/
             
             if(mysql_num_rows($result2)>0) {                
                 while($response = mysql_fetch_assoc($result2)) {
-	                if($response["IsArray"] == true) { //TODO: make this code work with escaped backslashes
-	                    $value = preg_split("/(?<!\\\\),/", $response["Value"]); //comma not preceded by a backslash
-	                    for($i=0;$i<count($value);$i++) {
-	                        $value[$i] = str_replace("\,", ",", $value[$i]);
-	                    }              
+	                if($response["IsArray"] == true) { 
+	                    $value = unserialize($response["Value"]);
 	                } else {
 	                    $value = $response["Value"];
 	                }
@@ -152,13 +150,10 @@ class Question {
 
         if(is_array($val)) {
             $isArr = 1;
-            foreach($val as $v) {
-                $v = str_replace(",", "\,", $v); //escape commas            
-            }
-            $val = implode(",", $val);
+            $val = serialize($val);
         }
         
-        $val = addslashes($val); //safe for sql execution
+        $val = mysql_real_escape_string($val); //safe for sql execution
         
         $fieldmapping = array(
             "QuestionCode" => strtoupper($this->code),

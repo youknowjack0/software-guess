@@ -87,13 +87,31 @@ if ($result = validateEstimateCode($_GET, "estimate")) {
             $locked = false;
             $lockedstr = "";
         }
-        if(!$locked) {
-            printf('<td>%d.</td><td><a href="estimate-question.php?estimate=%s&question=%s">%s</a></td><td>%s</td><td>%s</td><td></td>',$i, $_GET["estimate"], $v->code, $v->name, ($v->hasValue()?$answeredstr:$notansweredstr), ($v->isUpToDate($version)?"":$outofdatestr) );
+        $indentstr = "";
+        $slave = false;
+        if(isset($v->displaywith)) { //is this part of a group question?
+            if($v->displaywith == $v->code) { //this is the master question
+                $targetpage = "estimate-question-multi.php";
+                $slavei=0;
+                $mi=$i;
+            } else { //slave question
+                $locked = true;
+                $lockedstr = "";
+                $indentstr = "&nbsp;&nbsp;&nbsp;";
+                $slave = true;
+                $slavei++;
+                $i--;
+            }
         } else {
-            printf('<td>%d.</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td>',$i, $v->name, ($v->hasValue()?$answeredstr:$notansweredstr), ($v->isUpToDate($version)?"":$outofdatestr), $lockedstr);
+            $targetpage = "estimate-question.php";
+        }
+        if(!$locked) {
+            printf('<td>%d.</td><td><a href="%s?estimate=%s&question=%s">%s</a></td><td>%s</td><td>%s</td><td></td>',!$slave?"".$i:"", $targetpage, $_GET["estimate"], $v->code, $v->name, ($v->hasValue()?$answeredstr:$notansweredstr), ($v->isUpToDate($version)?"":$outofdatestr) );
+        } else {
+            printf('<td>%s</td><td>%s%s</td><td>%s</td><td>%s</td><td>%s</td>',$slave?"$mi.$slavei":"$i.", $indentstr, $v->name, ($v->hasValue()?$answeredstr:$notansweredstr), ($v->isUpToDate($version)?"":$outofdatestr), $lockedstr);
         }
         printf("</tr>");
-        $i++;
+        $i++;        
     }
     printf("</table>");
     print("<br />");
