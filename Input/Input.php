@@ -81,10 +81,16 @@ class Input {
 	        $input = new InputText($name, $column, $label, $validate, $default, $min, $max, $minlen, $maxlen, false);
 	    } elseif($type=="Radio") {
 	        $input = new InputRadio($name, $column, $label, $validate, $default, $min, $max, $minlen, $maxlen, false);
-	        //params
+	        //params	        
 	        $QOZHAAKHIGHA;
 	        eval("\$QOZHAAKHIGHA=".$templateparameters.";");        
 	        $input->items = $QOZHAAKHIGHA; 
+	    } elseif($type=="DynamicMultiText") {
+	        $input = new DynamicMultiText($name, $column, $label, $validate, $default, $min, $max, $minlen, $maxlen, false);
+	        $Q =& Question::$Q; //so template parameters can be processed if it references a question output
+	        $QOZHAAKHIGHA;
+	        eval("\$QOZHAAKHIGHA=".$templateparameters.";");
+	        $input->setCount($QOZHAAKHIGHA);
 	    }
 	    return $input;        
     }
@@ -149,10 +155,15 @@ class Input {
         $this->errormessage = "";
         if(is_array($this->value)) {
             $val = $this->value;
+            $specialerror = true;
         } else {
+            $specialerror = false;
             $val = array($this->label => $this->value);
         }
-        foreach($val as $k => $v) {            
+        foreach($val as $k => $v) {
+            if($specialerror) {
+                $k = $this->label . " (" . ($k+1) . ")";
+            }            
                     // test against regex
 	        if($this->validate != "") {
 		        $matches = array();
@@ -200,6 +211,12 @@ class Input {
         return $this->value;
     }
     
+    function setRequest($req) {
+        if(isset($req[$this->name])) {                        
+            $this->value = $req[$this->name];
+        }
+    }
+    
 }
 
 // use this to print some plain code as part of a form
@@ -224,5 +241,6 @@ class HTML extends Input {
 
 require 'Input/InputRadio.php';
 require 'Input/InputText.php';
+require 'Input/DynamicMultiText.php';
 
 ?>
