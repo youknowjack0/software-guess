@@ -27,9 +27,9 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 FILE INFO: estimate-question.php
-$LastChangedDate$
-$Revision$
-$Author$
+$LastChangedDate: 2010-04-15 16:43:28 +0800 (Thu, 15 Apr 2010) $
+$Revision: 30 $
+$Author: youknowjack@gmail.com $
 */
 ob_start();
 require 'components/db.php';
@@ -46,45 +46,57 @@ if (($rs_estimate = validateEstimateCode($_REQUEST, "estimate")) && ($allquestio
     
     $header_title = "Question response (estimate " . $estimatecode . ")";
     $header_extra = '<link rel="stylesheet" href="static/forms.css" type="text/css" />';
-    $template_breadcrumbs = getBreadcrumbs('estimate-question.php', array("estimate" => $_GET["estimate"]));
+    $template_breadcrumbs = getBreadcrumbs('estimate-question.php', array("estimate" => $_GET["estimate"])); //note: using the other estimate question page here is OK
     
     
-    $q = $allquestions[$_REQUEST["question"]];
+    $masterq = $allquestions[$_REQUEST["question"]];
     
     $form = new InputForm(-1, "POST", sprintf("estimate-question.php?estimate=%s&question=%s", $estimatecode, $_REQUEST["question"]));
+
+    $inputs = array();
+    foreach($allquestions as $q) {
         
-    $name = "megainput";    
-    $column = "megainput";
-    $label = $q->name;
-    $validate = $q->regex;
-    $default = $q->getLatestValue()    ;
-    $min = $q->min;
-    $max = $q->max;
-    $minlen = $q->minlen;
-    $maxlen = $q->maxlen;
+        if($q->displaywith != $masterq->code) { //only add slave questions
+            continue;
+        }
+        
+	    $name = $q->code;    
+	    $column = $q->code;
+	    $label = $q->name;
+	    $validate = $q->regex;
+	    $default = $q->getLatestValue()    ;
+	    $min = $q->min;
+	    $max = $q->max;
+	    $minlen = $q->minlen;
+	    $maxlen = $q->maxlen;
+	    
+        $input = Input::getInput($q->questiontemplate, $q->questiontemplateparameters, $name, $column, $label, $validate, $default, $min, $max, $minlen, $maxlen, false);          	       
+	    $input->setHelp($q->shorthelp);
+	    $input->setLongHelp($q->longhelp);
+	    $input->setTemplate('compact.php');
+	    $inputs[$q->code] = $input;
+    }
     
-    $input = Input::getInput($q->questiontemplate, $q->questiontemplateparameters, $name, $column, $label, $validate, $default, $min, $max, $minlen, $maxlen, false);          
-    $input->setHelp($q->shorthelp);
-    $input->setLongHelp($q->longhelp);
-    $input->setTemplate('extended.php');
+    foreach($inputs as $input) { //recycling the $input var
+        $form->addInput($input);
+    }
     
-    
-    $form->addInput($input);
-    
-    $form->setButtons(array(array("savereturn","Save &amp; return"), array("savenext", "Save &amp; next")));
+    $form->setButtons(array(array("savereturn","Save &amp; return"))); //removed save and next button: , array("savenext", "Save &amp; next")
     
     
     $whichbutton = $form->setRequest($_REQUEST);
     
     if($form->isResult()) {
-        if($form->isValid()) { //TODO: confirmation success message
-            $q->setResponse($latestversion, $input->getValue());
-            $q->committResponse($latestversion, $estimatecode);
-            $success = urlencode(sprintf("Updated %s successfully!", $q->name));
+        if($form->isValid()) {
+            foreach($inputs as $inputkey => $input) { 
+	            $allquestions[$inputkey]->setResponse($latestversion, $input->getValue());
+	            $allquestions[$inputkey]->committResponse($latestversion, $estimatecode);
+            }
+            $success = urlencode(sprintf("Updated %s successfully!", $masterq->name));
             if($whichbutton == "savereturn") {
                 header(sprintf("Location: estimate.php?estimate=%s&success=%s",$estimatecode,$success));
                 exit;
-            } elseif($whichbutton == "savenext") {
+            } /*elseif($whichbutton == "savenext") {
                 //update Q so the lock calculation will be correct:
                 Question::$Q[$_REQUEST["question"]]=$q->getLatestValue();
                 
@@ -101,7 +113,7 @@ if (($rs_estimate = validateEstimateCode($_REQUEST, "estimate")) && ($allquestio
                     }
                 }
                                 
-                //test it's condition
+                //test its condition
                 if(isset($nextq) && $nextq->canAnswer()) {
                     $location = sprintf("estimate-question.php?estimate=%s&question=%s", $estimatecode, $nextq->code);
                     $error = "";
@@ -115,7 +127,7 @@ if (($rs_estimate = validateEstimateCode($_REQUEST, "estimate")) && ($allquestio
                 
                 header(sprintf("Location: %s&error=%s&success=%s",$location,$error,$success));
                 exit;
-            }
+            }*/
         } else {
             $template_error = $form->getError();   
         }        

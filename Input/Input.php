@@ -74,6 +74,21 @@ class Input {
         $this->longHelp = "";
     }
     
+    // once again, OO this!
+    static function getInput($type, $templateparameters, $name, $column, $label, $validate='', $default='', $min=-1, $max=-1, $minlen=-1, $maxlen=-1, $locked=false) {
+        $input;
+	    if($type=="SimpleText") { 
+	        $input = new InputText($name, $column, $label, $validate, $default, $min, $max, $minlen, $maxlen, false);
+	    } elseif($type=="Radio") {
+	        $input = new InputRadio($name, $column, $label, $validate, $default, $min, $max, $minlen, $maxlen, false);
+	        //params
+	        $QOZHAAKHIGHA;
+	        eval("\$QOZHAAKHIGHA=".$templateparameters.";");        
+	        $input->items = $QOZHAAKHIGHA; 
+	    }
+	    return $input;        
+    }
+    
     function setTemplate($file) {
         $this->template = $file;
     }
@@ -132,40 +147,47 @@ class Input {
     
     function isValid() {
         $this->errormessage = "";
-        // test against regex
-        if($this->validate != "") {
-	        $matches = array();
-	        //print($this->validate);
-	        preg_match('/'.$this->validate.'/', $this->value, $matches);
-	        if(!isset($matches[0]) || !($matches[0] == $this->value)) {
-	            $this->errormessage = sprintf('Input "%s" in field "%s" is not valid: it does not match regex "%s"', htmlspecialchars($this->value), $this->label, $this->validate);
-	            return false;
+        if(is_array($this->value)) {
+            $val = $this->value;
+        } else {
+            $val = array($this->label => $this->value);
+        }
+        foreach($val as $k => $v) {            
+                    // test against regex
+	        if($this->validate != "") {
+		        $matches = array();
+		        //print($this->validate);
+		        preg_match('/'.$this->validate.'/', $v, $matches);
+		        if(!isset($matches[0]) || !($matches[0] == $v)) {
+		            $this->errormessage = sprintf('Input "%s" in field "%s" is not valid: it does not match regex "%s"', htmlspecialchars($v), $k, $this->validate);
+		            return false;
+		        }
 	        }
-        }
-        //test for length
-        if($this->min != -1) { // todo: check for float/int binary representation issues
-            if(floatval($this->value) < $this->min) {
-                $this->errormessage = sprintf('Input "%s" in field "%s" is not valid: it is less than the minimum of %s"', htmlspecialchars($this->value), $this->label, $this->min);
-                return false;
-            }
-        }
-        if($this->max != -1) { // todo: check for float/int binary representation issues
-            if(floatval($this->value) > $this->max) {
-                $this->errormessage = sprintf('Input "%s" in field "%s" is not valid: it is greater than the maximum of %s"', htmlspecialchars($this->value), $this->label, $this->max);
-                return false;
-            }
-        }
-        if($this->minlen != -1) {
-            if(strlen($this->value) < $this->minlen) {
-                $this->errormessage = sprintf('Input "%s" (%s chars) in field "%s" is not valid: it is shorter than the minimum length of %s"', htmlspecialchars($this->value), strlen($this->value), $this->label, $this->minlen);
-                return false;
-            }
-        }
-        if($this->maxlen != -1) {
-            if(strlen($this->value) > $this->maxlen) {
-                $this->errormessage = sprintf('Input "%s" (%s chars) in field "%s" is not valid: it is longer than the maximum length of %s"', htmlspecialchars($this->value), strlen($this->value), $this->label, $this->maxlen);
-                return false;
-            }
+	        //test for length
+	        if($this->min != -1) { // todo: check for float/int binary representation issues
+	            if(floatval($v) < $this->min) {
+	                $this->errormessage = sprintf('Input "%s" in field "%s" is not valid: it is less than the minimum of %s"', htmlspecialchars($v), $k, $this->min);
+	                return false;
+	            }
+	        }
+	        if($this->max != -1) { // todo: check for float/int binary representation issues
+	            if(floatval($v) > $this->max) {
+	                $this->errormessage = sprintf('Input "%s" in field "%s" is not valid: it is greater than the maximum of %s"', htmlspecialchars($v), $k, $this->max);
+	                return false;
+	            }
+	        }
+	        if($this->minlen != -1) {
+	            if(strlen($v) < $this->minlen) {
+	                $this->errormessage = sprintf('Input "%s" (%s chars) in field "%s" is not valid: it is shorter than the minimum length of %s"', htmlspecialchars($v), strlen($v), $k, $this->minlen);
+	                return false;
+	            }
+	        }
+	        if($this->maxlen != -1) {
+	            if(strlen($v) > $this->maxlen) {
+	                $this->errormessage = sprintf('Input "%s" (%s chars) in field "%s" is not valid: it is longer than the maximum length of %s"', htmlspecialchars($v), strlen($v), $k, $this->maxlen);
+	                return false;
+	            }
+	        }
         }
         return true;                   
     }
