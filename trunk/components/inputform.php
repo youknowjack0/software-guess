@@ -127,9 +127,7 @@ $Author$
             if($buttonPressed) {
                 $this->isResult = true;                
                 foreach ($this->inputs as $i) {
-                    if(isset($req[$i->name])) {                        
-                        $i->value = $req[$i->name];
-                    }
+                    $i->setRequest($req);
                 }
                 return $buttonPressed;
             }

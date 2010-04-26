@@ -86,12 +86,12 @@ class Calculation {
         if(!isset($data)) {
             $data = $this->result;
         }
-        if ($this->ReturnsArray == 1) {
+        if (is_array($data)) {
             ob_start();
             print_r($data);            
             return "<pre>". htmlspecialchars(ob_get_clean()) . "</pre>";
         } else {
-            return htmlspecialchars($data);
+            return isset($data) ? htmlspecialchars($data."") : "";
         }
     }
 }
