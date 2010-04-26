@@ -51,7 +51,7 @@ if (($rs_estimate = validateEstimateCode($_REQUEST, "estimate")) && ($allquestio
     
     $masterq = $allquestions[$_REQUEST["question"]];
     
-    $form = new InputForm(-1, "POST", sprintf("estimate-question.php?estimate=%s&question=%s", $estimatecode, $_REQUEST["question"]));
+    $form = new InputForm(-1, "POST", sprintf("estimate-question-multi.php?estimate=%s&question=%s", $estimatecode, $_REQUEST["question"]));
 
     $inputs = array();
     foreach($allquestions as $q) {
