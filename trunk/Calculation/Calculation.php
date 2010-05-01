@@ -14,6 +14,7 @@ class Calculation {
     var $error;
     
     public static $C = array();
+    public static $allcalcs; //for efficiency
         
     /* sets $C given an array of $calcs (probably from getAllCalculations)
      * & Q (from Question)
@@ -47,14 +48,19 @@ class Calculation {
     }
     
     static function getAllCalculations() {
-        $calculations = array();
-        $sql = "SELECT Calculations.*, QuestionGroups.GroupName FROM Calculations LEFT JOIN QuestionGroups ON QuestionGroups.ID = Calculations.GroupID ORDER BY `Order` ASC";
-        $result = mysql_query($sql);
-        while($calc = mysql_fetch_assoc($result)) {                                     
-            $cObj = new Calculation($calc["Code"], $calc["ID"], $calc["PHP"], $calc["Name"], $calc["ReturnsArray"], $calc["Order"], $calc["GroupID"], $calc["GroupName"]);            
-            $calculations[$cObj->Code] = $cObj;            
-        }                
-        return $calculations;        
+        if(isset(Calculation::$allcalcs)) {
+            return Calculation::$allcalcs;
+        } else {
+	        $calculations = array();
+	        $sql = "SELECT Calculations.*, QuestionGroups.GroupName FROM Calculations LEFT JOIN QuestionGroups ON QuestionGroups.ID = Calculations.GroupID ORDER BY `Order` ASC";
+	        $result = mysql_query($sql);
+	        while($calc = mysql_fetch_assoc($result)) {                                     
+	            $cObj = new Calculation($calc["Code"], $calc["ID"], $calc["PHP"], $calc["Name"], $calc["ReturnsArray"], $calc["Order"], $calc["GroupID"], $calc["GroupName"]);            
+	            $calculations[$cObj->Code] = $cObj;            
+	        } 
+	        Calculation::$allcalcs = $calculations;                
+            return $calculations;
+        }        
     }
     
     /* returns an array for results from this calculation across ALL estimates (last saved version only)
