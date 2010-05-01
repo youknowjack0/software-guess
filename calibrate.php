@@ -49,6 +49,8 @@ require 'chart/pChart/pData.class';
 require 'chart/pChart/pChart.class';
 ob_end_clean();
 
+require 'Calibration/Calibration.php';
+
 $header_title = "Calibration";
 $template_breadcrumbs = getBreadcrumbs('calibration.php', array());
 
@@ -70,8 +72,7 @@ while($rowp = mysql_fetch_assoc($rs_pairs)) { // iterate over pairs
     
     $arr1 = $allcalcs[$c1code]->getAllResults();
     $arr2 = $allcalcs[$c2code]->getAllResults();
-    
-    $result = array();
+   
     
     $correlation;
     $sumx=0;
@@ -213,6 +214,18 @@ while($rowp = mysql_fetch_assoc($rs_pairs)) { // iterate over pairs
      printf("<strong>Correlation number: %.3f </strong>(1 indicates a strong positive relationship, -1 a strong negative relationship)<br />", $correlation);
      printf("<strong>Best linear fit: y = %.3f + %.3fx</strong><br />", $a, $b);
      printf("Given input '%s', can estimate '%s': <br />&#956;=%.3f+%.3fx, &#963;= %.3f", $allcalcs[$c1code]->Name, $allcalcs[$c2code]->Name, $a, $b, $stddev);
+     print("<hr />");
+     
+     print("REPEATED FOR CHECK");
+     $calib = new Calibration($rowp["Calc1"], $rowp["Calc2"], true);
+     $calib->setDisplayText($rowp["DisplayText"]);
+     $calib->setDescription($rowp["Description"]);
+     
+      printf("<h3>%s</h3>", $calib->getDisplayText());      
+     printf("%s<br />",$calib->getDescription());
+	 printf("<img src=\"%s\" /><br />",$calib->getChartFilename());
+     printf("<strong>Correlation number: %.3f </strong>(1 indicates a strong positive relationship, -1 a strong negative relationship)<br />", $calib->getCorrelation());
+     printf("<strong>Best linear fit: y = %.3f + %.3fx; &#963;=%f</strong><br />", $calib->getA(), $calib->getB(), $calib->getStDev());     
      print("<hr />");
      
 }
