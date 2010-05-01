@@ -1,5 +1,7 @@
 <?php
 
+require_once 'Calibration/Calibration.php';
+
 class Calculation {
     
     var $Code;
