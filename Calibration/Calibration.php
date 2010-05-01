@@ -65,6 +65,10 @@ class Calibration {
     
     //chart 
     var $chart;
+    
+    //calc names
+    var $calc1name;
+    var $calc2name;
         
     
     /* Construct a calibration object given two calculations as parameters
@@ -87,8 +91,12 @@ class Calibration {
         // where the project is released
         $arr1 = $calc1->getAllResults();
         $arr2 = $calc2->getAllResults(); 
+        
+        //save calc names
+        $this->calc1name = $calc1->Name;
+        $this->calc2name = $calc2->Name;
 
-        // chart data
+        // chart data        
         $this->data = new pData;
         $this->data2 = new pData;
         
@@ -282,6 +290,23 @@ class Calibration {
     
     function getStDev() {
         return $this->stdev;
+    }
+    
+    function getCalc1Name() {
+        return $this->calc1name;
+    }
+    
+    function getCalc2Name() {
+        return $this->calc2name;
+    }
+    
+    function predictMean($x) {
+        return $this->linearfit_a + $this->linearfit_b*$x;
+    }
+    
+    //alias for getStDev
+    function predictStDev() {
+        return $this->getStDev();
     }
     
 }
