@@ -44,16 +44,17 @@ if (($rs_estimate = validateEstimateCode($_REQUEST, "estimate")) && ($allquestio
     $latestversion = $row_estimate["LastIteration"] +1;
     $estimatecode = $row_estimate["AccessCode"];
     
-    $header_title = "Question response (estimate " . $estimatecode . ")";
     $header_extra = '<link rel="stylesheet" href="static/forms.css" type="text/css" />';
     $template_breadcrumbs = getBreadcrumbs('estimate-question.php', array("estimate" => $_GET["estimate"])); //note: using the other estimate question page here is OK
     
     
     $masterq = $allquestions[$_REQUEST["question"]];
+    $header_title = "Question response (" . $masterq->name . ")";
     
     $form = new InputForm(-1, "POST", sprintf("estimate-question-multi.php?estimate=%s&question=%s", $estimatecode, $_REQUEST["question"]));
 
     $inputs = array();
+    $lastqcode; //last question in the group
     foreach($allquestions as $q) {
         
         if($q->displaywith != $masterq->code) { //only add slave questions
@@ -75,14 +76,15 @@ if (($rs_estimate = validateEstimateCode($_REQUEST, "estimate")) && ($allquestio
 	    $input->setLongHelp($q->longhelp);
 	    $input->setTemplate('compact.php');
 	    $inputs[$q->code] = $input;
+	    $lastqcode  = $q->code;
     }
     
     foreach($inputs as $input) { //recycling the $input var
         $form->addInput($input);
     }
     
-    $form->setButtons(array(array("savereturn","Save &amp; return"))); //removed save and next button: , array("savenext", "Save &amp; next")
-    
+    $form->setButtons(array(array("savereturn","Save &amp; return"), array("savenext", "Save &amp; next")));
+        
     
     $whichbutton = $form->setRequest($_REQUEST);
     
@@ -96,9 +98,11 @@ if (($rs_estimate = validateEstimateCode($_REQUEST, "estimate")) && ($allquestio
             if($whichbutton == "savereturn") {
                 header(sprintf("Location: estimate.php?estimate=%s&success=%s",$estimatecode,$success));
                 exit;
-            } /*elseif($whichbutton == "savenext") {
+            } elseif($whichbutton == "savenext") {
                 //update Q so the lock calculation will be correct:
-                Question::$Q[$_REQUEST["question"]]=$q->getLatestValue();
+                foreach($inputs as $inputkey => $input) {
+                    Question::$Q[$inputkey]=$input->getValue();
+                }
                 
                 //figure out which question is next
                 $next = false;
@@ -108,15 +112,20 @@ if (($rs_estimate = validateEstimateCode($_REQUEST, "estimate")) && ($allquestio
                         $nextq = $aq; 
                         break;
                     }
-                    if(strtoupper($ak) == strtoupper($_REQUEST['question'])) {
+                    if($ak == $lastqcode) {
                         $next = true;
                     }
                 }
                                 
                 //test its condition
                 if(isset($nextq) && $nextq->canAnswer()) {
-                    $location = sprintf("estimate-question.php?estimate=%s&question=%s", $estimatecode, $nextq->code);
-                    $error = "";
+                    if( is_null($nextq->displaywith) || $nextq->displaywith == "") {
+	                    $location = sprintf("estimate-question.php?estimate=%s&question=%s", $estimatecode, $nextq->code);
+	                    $error = "";
+                    } else {
+                        $location = sprintf("estimate-question-multi.php?estimate=%s&question=%s", $estimatecode, $nextq->code);
+                        $error = "";
+                    }                    
                 } elseif(!isset($nextq)) {
                     $error = urlencode("Could not go to next question, you just answered the last question.");
                     $location = sprintf("estimate.php?estimate=%s", $estimatecode);
@@ -127,7 +136,7 @@ if (($rs_estimate = validateEstimateCode($_REQUEST, "estimate")) && ($allquestio
                 
                 header(sprintf("Location: %s&error=%s&success=%s",$location,$error,$success));
                 exit;
-            }*/
+            }
         } else {
             $template_error = $form->getError();   
         }        

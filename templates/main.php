@@ -45,7 +45,7 @@ $HeadURL$
 
 	<div id="bigboy">
 		<div id="topdiv">
-			<a href="index.php"><img id="logo" style="border:none;" src="static/GUESStitle2.png" alt="G.U.E.S.S." /></a>
+			<img id="logo" style="border:none;" src="static/GUESStitle2.png" alt="G.U.E.S.S." />	
 		</div>
 		<div id="topright">
 		</div>

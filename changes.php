@@ -59,7 +59,7 @@ if ($rs_estimate = validateEstimateCode($_GET, 'estimate')) {
     
     // print questions table
     printf("<table class=\"estimates\">");
-    printf("<tr class=\"estimatemainheader\"><th></th><th>Question</th>");
+    printf("<tr class=\"estimatemainheader\"><th></th><th>Question</th><th>Code</th>");
     
     for($i=1;$i<=$version;$i++) {        
         printf("<th>%d</th>", $i);        
@@ -77,7 +77,7 @@ if ($rs_estimate = validateEstimateCode($_GET, 'estimate')) {
             $r_group = mysql_query($sql);
             $row_group = mysql_fetch_assoc($r_group);
 
-            printf("<tr><th class=\"estimategroupheader\" colspan=\"%d\">%s</td>",$version + 2, $row_group["GroupName"]);
+            printf("<tr><th class=\"estimategroupheader\" colspan=\"%d\">%s</td>",$version + 3, $row_group["GroupName"]);
 
             $lastgroup = $v->groupid;
         }
@@ -86,6 +86,7 @@ if ($rs_estimate = validateEstimateCode($_GET, 'estimate')) {
         
         printf("<th>%d</th>", $qnum);
         printf("<td>%s</td>", $v->name);
+        printf("<td>%s</td>", $v->code);
 
         $lastval;
         for($i=1;$i<=$version;$i++) {        

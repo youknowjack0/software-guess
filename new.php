@@ -43,6 +43,9 @@ require 'components/inputform.php';
 
 $form = new InputForm(-1, "GET", "new.php");
 
+$template_breadcrumbs = getBreadcrumbs('new.php');
+
+
 // public estimate identifier code
 // TODO: check identifiers in the database before using
 $input = array();

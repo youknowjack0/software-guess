@@ -52,6 +52,7 @@ class Question {
     var $groupid;
     var $dbkey; //for the LATEST RESPONSE
     var $dbversion=0; //version of latest value from the db //TODO: This is not nice n clear
+    var $displaywith;
     
     public static $Q = array();
     
@@ -80,7 +81,7 @@ class Question {
             //set question fields
             $qObj->questiontemplate = $question["QuestionTemplate"];
             $qObj->questiontemplateparameters = $question["QuestionTemplateParameters"];
-            $qObj->name = $question["Name"] . " (" . $qObj->code . ")";
+            $qObj->name = $question["Name"];
             $qObj->shorthelp = $question["ShortHelp"];
             $qObj->longhelp = $question["LongHelp"];
             $qObj->conditions = $question["Conditions"];

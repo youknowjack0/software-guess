@@ -50,7 +50,7 @@ if ($result = validateEstimateCode($_REQUEST, 'estimate')) {
         array("name" => "Start Estimating", "file" => "estimate.php?estimate=".$estimate_code, "image" => "copyrightimages/pencil.png", "type" => "button"),
         array("name" => "Simple Report", "file" => "report_simple.php?estimate=".$estimate_code, "image" => "copyrightimages/reports.png", "type" => "button", "disabled" => ($row["LastIteration"]>0?false:true)),
         array("name" => "Extended Report", "file" => "report_extended.php?estimate=".$estimate_code, "image" => "copyrightimages/largereport.png", "type" => "button", "disabled" => ($row["LastIteration"]>0?false:true)),
-        array("name" => "Raw Calculations", "file" => "calculations.php?estimate=".$estimate_code, "image" => "copyrightimages2/math.png", "type" => "button", "disabled" => ($row["LastIteration"]>0?false:true)),
+        array("name" => "Current Calculations", "file" => "calculations.php?estimate=".$estimate_code, "image" => "copyrightimages2/math.png", "type" => "button", "disabled" => ($row["LastIteration"]>0?false:true)),
         array("name" => "Change History", "file" => "changes.php?estimate=".$estimate_code, "image" => "copyrightimages/cert.png", "type" => "button", "disabled" => ($row["LastIteration"]>0?false:true))
     );
     $biglinks_height = 80;

@@ -115,7 +115,7 @@ function validateQuestionCode($req) {
 
 }
 
-function getBreadcrumbs($file, $parameters) {
+function getBreadcrumbs($file, $parameters=array()) {
     $sitemap = array (
         "Home" => array("file" => "index.php"),
         "Estimate Home" => array("file" => "estimatehome.php", "params" => array("estimate"), "parent" => "Home"),
@@ -123,7 +123,8 @@ function getBreadcrumbs($file, $parameters) {
         "Question" => array("file" => "estimate-question.php", "params" => array("estimate", "question"), "parent" => "Question List"),
         "Change History" => array("file" => "changes.php", "params" => array("estimate"), "parent" => "Estimate Home"),
         "Calculations" => array("file" => "calculations.php", "params" => array("estimate"), "parent" => "Estimate Home"),
-        "Calibration" => array("file" => "calibration.php", "params" => array("password"), "parent" => "Home")       
+        "Calibration" => array("file" => "calibration.php", "parent" => "Home"),
+        "New Estimate" => array("file" => "new.php", "parent" => "Home")       
     );
     
     $linktemplate = '<a href="%s">%s</a> &gt; ';
