@@ -89,6 +89,7 @@ class Calibration {
         // fetch array of all calculation results for use in calculations
         // note this function is defined only to return results from estimates
         // where the project is released
+        // and only numeric results (lol hacky)
         $arr1 = $calc1->getAllResults();
         $arr2 = $calc2->getAllResults(); 
         
@@ -115,7 +116,7 @@ class Calibration {
     
 	    
 	    // iterate all calculation results
-	    foreach($arr1 as $k => $x) {      
+	    foreach($arr1 as $k => $x) {
 	        //only use results if there is a pair from a single estimate  
 	        if(isset($arr2[$k])) {
 	            $N++;
@@ -147,8 +148,10 @@ class Calibration {
 	        }
 	    }
 	    
-	    if (!isset($xmax)) {
+	    if ($xmax == null) {
 	        $this->hasData = false;
+	        ob_end_clean();
+	        print("Error: No data to use for calibration.");
 	        return;
 	    }
         
@@ -238,7 +241,7 @@ class Calibration {
 		    $chart->drawXYGraph($this->data3->GetData(), $this->data2->GetDataDescription(), "Serie6", "Serie5");	    
 		    
 		    //output file name
-		    $this->filename = $calc1->Code . "~~" . $calc2->Code     . ".png";
+		    $this->filename = $calc1->Code . "~" . $calc2->Code     . ".png";
 		    
 		    //save file
 		    $chart->Render($this->filename);

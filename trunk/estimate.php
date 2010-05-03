@@ -58,11 +58,11 @@ if ($result = validateEstimateCode($_GET, "estimate")) {
     $lastgroup = -1;
     
     //$currentstr = " [current]"
-    printf("<table class=\"estimates\">");
-    printf("<tr class=\"estimatemainheader\"><th></th><th>Question</th><th>Answered?</th><th>Out of Date?</th><th>Locked?</th></tr>");
+    printf("<table cellpadding=\"1\" cellspacing=\"0\" class=\"estimates\" style=\"border-bottom:1px solid black\">");
+    printf("<tr class=\"estimatemainheader\"><th></th><th>Question</th><th>Code</th><th>Answered?</th><th>Out of Date?</th><th>Locked?</th></tr>");
     $i=1;
-    foreach($questions as $k => $v) {
-        
+    $cellcolor = 2;
+    foreach($questions as $k => $v) {                    
         //print group header if required
         if($lastgroup != $v->groupid) {
             
@@ -70,12 +70,11 @@ if ($result = validateEstimateCode($_GET, "estimate")) {
             $r_group = mysql_query($sql);
             $row_group = mysql_fetch_assoc($r_group);            
             
-            printf("<tr><th class=\"estimategroupheader\" colspan=\"5\">%s</td>", $row_group["GroupName"]);
+            printf("<tr><th class=\"estimategroupheader\" colspan=\"6\">%s</td>", $row_group["GroupName"]);
             
             $lastgroup = $v->groupid;
         }
-        
-        printf("<tr>");
+                
         if(!$v->canAnswer()) {
             $lockedstr = sprintf("locked! condition: <span class=\"code\">%s</span>", $v->conditions);
             $regex = '/(\\$Q\\["|\\$Q\[\')([a-zA-Z0-9_]+)("\]|\'\])/';
@@ -88,27 +87,40 @@ if ($result = validateEstimateCode($_GET, "estimate")) {
             $lockedstr = "";
         }
         $indentstr = "";
+        $cellclass = " importantcell";          
         $slave = false;
         if(isset($v->displaywith)) { //is this part of a group question?
             if($v->displaywith == $v->code) { //this is the master question
                 $targetpage = "estimate-question-multi.php";
                 $slavei=0;
                 $mi=$i;
+                if($cellcolor == 1) {
+                    $cellcolor = 2;
+                } else {
+                    $cellcolor = 1;
+                }
             } else { //slave question
+                $cellclass = "";
                 $locked = true;
                 $lockedstr = "";
-                $indentstr = "&nbsp;&nbsp;&nbsp;";
+                $indentstr = " style=\"padding-left:15px\"";
                 $slave = true;
                 $slavei++;
                 $i--;
             }
         } else {
+            if($cellcolor == 1) {
+                $cellcolor = 2;
+            } else {
+                $cellcolor = 1;
+            }            
             $targetpage = "estimate-question.php";
         }
+        printf("<tr class=\"altcolor%d%s\">", $cellcolor, $cellclass);
         if(!$locked) {
-            printf('<td>%d.</td><td><a href="%s?estimate=%s&question=%s">%s</a></td><td>%s</td><td>%s</td><td></td>',!$slave?"".$i:"", $targetpage, $_GET["estimate"], $v->code, $v->name, ($v->hasValue()?$answeredstr:$notansweredstr), ($v->isUpToDate($version)?"":$outofdatestr) );
+            printf('<td><strong>%d.</strong></td><td><a href="%s?estimate=%s&question=%s">%s</a></td><td>%s</td><td>%s</td><td>%s</td><td></td>',!$slave?"".$i:"", $targetpage, $_GET["estimate"], $v->code, $v->name, $v->code, ($v->hasValue()?$answeredstr:$notansweredstr), ($v->isUpToDate($version)?"":$outofdatestr) );
         } else {
-            printf('<td>%s</td><td>%s%s</td><td>%s</td><td>%s</td><td>%s</td>',$slave?"$mi.$slavei":"$i.", $indentstr, $v->name, ($v->hasValue()?$answeredstr:$notansweredstr), ($v->isUpToDate($version)?"":$outofdatestr), $lockedstr);
+            printf('<td>%s</td><td%s>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td>',$slave?"$mi.$slavei":"$i.", $indentstr, $v->name, $v->code, ($v->hasValue()?$answeredstr:$notansweredstr), ($v->isUpToDate($version)?"":$outofdatestr), $lockedstr);
         }
         printf("</tr>");
         $i++;        

@@ -45,6 +45,18 @@ body {
 	background-color: #EEC;	
 }
 
+tr.importantcell td {
+	border-top: 1px solid black;	
+}
+
+tr.altcolor1 td {
+	background-color: #FFF;
+}
+
+tr.altcolor2 td {
+	background-color: #f0f7ff;
+}
+
 h2  {
 	margin: 0px;
 	padding: 0px;
@@ -150,7 +162,7 @@ hr {
 	border-style: none;
 	border-bottom-style: solid;
 	border-right-style: solid;
-	border-color: #AAA;
+	border-color: #CCC;
 	border-width: 1px;
 	padding: 5px;
 	margin: 0px;

@@ -44,12 +44,13 @@ if (($rs_estimate = validateEstimateCode($_REQUEST, "estimate")) && ($allquestio
     $latestversion = $row_estimate["LastIteration"] +1;
     $estimatecode = $row_estimate["AccessCode"];
     
-    $header_title = "Question response (estimate " . $estimatecode . ")";
+    
     $header_extra = '<link rel="stylesheet" href="static/forms.css" type="text/css" />';
     $template_breadcrumbs = getBreadcrumbs('estimate-question.php', array("estimate" => $_GET["estimate"]));
     
     
     $q = $allquestions[$_REQUEST["question"]];
+    $header_title = "Question response (" . $q->name . ")";
     
     $form = new InputForm(-1, "POST", sprintf("estimate-question.php?estimate=%s&question=%s", $estimatecode, $_REQUEST["question"]));
         
@@ -103,8 +104,13 @@ if (($rs_estimate = validateEstimateCode($_REQUEST, "estimate")) && ($allquestio
                                 
                 //test it's condition
                 if(isset($nextq) && $nextq->canAnswer()) {
-                    $location = sprintf("estimate-question.php?estimate=%s&question=%s", $estimatecode, $nextq->code);
-                    $error = "";
+                    if( is_null($nextq->displaywith) || $nextq->displaywith == "") {
+	                    $location = sprintf("estimate-question.php?estimate=%s&question=%s", $estimatecode, $nextq->code);
+	                    $error = "";
+                    } else {
+                        $location = sprintf("estimate-question-multi.php?estimate=%s&question=%s", $estimatecode, $nextq->code);
+                        $error = "";
+                    }      
                 } elseif(!isset($nextq)) {
                     $error = urlencode("Could not go to next question, you just answered the last question.");
                     $location = sprintf("estimate.php?estimate=%s", $estimatecode);

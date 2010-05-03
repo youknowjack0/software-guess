@@ -44,11 +44,6 @@ require 'components/db.php';
 require 'Calculation/Calculation.php';
 require 'question/Question.php';
 
-ob_start();
-require 'chart/pChart/pData.class';
-require 'chart/pChart/pChart.class';
-ob_end_clean();
-
 require 'Calibration/Calibration.php';
 
 $header_title = "Calibration";

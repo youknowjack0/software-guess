@@ -62,7 +62,7 @@ $Author$
         if ($item["type"] == "button" && isset($item["disabled"]) && $item["disabled"] == true) {
             printf('<img src="%s" alt="Not Yet Available" class="biglinks_image"/><br />%s</a>', $item["image"], $item["name"]);
         } elseif ($item["type"] == "button") {
-            printf('<a href="%s"><img src="%s" class="biglinks_image" alt="%s" /><br />%s</a>', $item["file"], $item["image"], $item["name"], $item["name"]);
+            printf('<a href="%s"><img src="%s" class="biglinks_image" alt="%s" /></a><a href="%s"><br />%s</a>', $item["file"], $item["image"], $item["name"], $item["file"],$item["name"]);
         } elseif ($item["type"] == "input") {
             printf('<form method="GET" action="%s" >', $item["file"]);
             printf('<img src="%s" class="biglinks_image" alt="%s" /><br />%s<br />', $item["image"], $item["name"], isset($item["html"]) ? $item["html"] : $item["name"]);

@@ -74,7 +74,10 @@ class Calculation {
         $rs_calculationresults = mysql_query($sql);
         $return = array();
         while($row = mysql_fetch_assoc($rs_calculationresults)) {
-            $return[$row["EstimateCode"]] = unserialize($row["Data"]);
+            $data = unserialize($row["Data"]);
+            if(is_numeric($data)) {
+                $return[$row["EstimateCode"]] = $data;
+            }
         }
         return $return;        
     }
