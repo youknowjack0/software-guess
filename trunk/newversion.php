@@ -74,7 +74,7 @@ if ($result = validateEstimateCode($_GET, "estimate")) {
         }
 
         //done, redirect
-        header(sprintf("Location: estimate.php?estimate=%s&success=%s",$estimate_code,"New version action was successful."));
+        header(sprintf("Location: estimatehome.php?estimate=%s&success=%s",$estimate_code,"New version action was successful."));
     } else {
 	    
 	    printf("<strong>Are you sure you want to create a new version?</strong>");

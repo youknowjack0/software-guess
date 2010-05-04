@@ -129,7 +129,7 @@ if ($result = validateEstimateCode($_GET, "estimate")) {
     print("<br />");
     printf("<form action=\"newversion.php\" method=\"GET\">");
     printf("<input type=\"hidden\" name=\"estimate\" value=\"%s\" />", $_GET['estimate']);
-    printf("<input type=\"submit\" name=\"new\" value=\"Committ Changes &amp Progress to v%d\"/>", $version+1);
+    printf("<input type=\"submit\" name=\"new\" value=\"Commit Changes &amp Progress to v%d\"/>", $version+1);
     printf("</form>");
 } else {
     $header_title = "Estimate";
