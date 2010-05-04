@@ -79,7 +79,7 @@ if ($result = validateEstimateCode($_GET, "estimate")) {
             $lockedstr = sprintf("locked! condition: <span class=\"code\">%s</span>", $v->conditions);
             $regex = '/(\\$Q\\["|\\$Q\[\')([a-zA-Z0-9_]+)("\]|\'\])/';
             //printf($regex); //debug            
-            $lockedstr = preg_replace($regex, sprintf('<a href="estimate-question.php?estimate=%s&question=%s">$2</a>', $_GET["estimate"], $v->code) , $lockedstr); //replace $Q["CODE"]/$Q['CODE'] with a link
+            $lockedstr = preg_replace($regex, sprintf('<a href="estimate-question.php?estimate=%s&question=$2">$2</a>', $_GET["estimate"], $v->code) , $lockedstr); //replace $Q["CODE"]/$Q['CODE'] with a link
             $locked = true;
             //TODO: don't show a link if the target is locked            
         } else {
