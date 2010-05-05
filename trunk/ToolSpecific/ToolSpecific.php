@@ -1,6 +1,8 @@
 <?php
 function FPComplexity($type, $comp1, $comp2, $low, $med, $high, $comp1high, $comp1med, $comp2high, $comp2med) {
-
+    $Q = Question::$Q;
+    $C = Calculation::$C;    
+    
 	if(isset($Q[$type]) && isset($Q[$comp1]) && isset($Q[$comp2])) 
 	{
 
