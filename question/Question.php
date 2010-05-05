@@ -139,7 +139,13 @@ class Question {
      */
     function canAnswer() {
         $Q =& Question::$Q;
+        ob_start();
         eval("\$ISNGOISUGNOI=".$this->conditions.";");
+        $SYS_ERROR = ob_get_clean();
+        if(isset($SYS_ERROR) && $SYS_ERROR != "") {
+            printf("Error for question code %s:\n", $this->code);
+            print($SYS_ERROR);            
+        }
         return $ISNGOISUGNOI;
     }
     
