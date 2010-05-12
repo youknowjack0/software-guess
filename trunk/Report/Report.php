@@ -10,12 +10,13 @@ class Report {
     }
     
     function addf($key, $value) {
-        $fields[$key] = $value;    
+        $this->fields[$key] = $value;    
     }       
     
     function printReport($templatestring) { //children should override & call, should not be called directly
-        foreach($fields as $k => $v) {
-            $templatestring = str_replace("%%$k%%", $v, $templatestring);
+        foreach($this->fields as $k => $v) {
+            $x = strtoupper($k);
+            $templatestring = str_replace("%%$x%%", $v, $templatestring);
         }
         print($templatestring);
     }
@@ -23,11 +24,11 @@ class Report {
 
 class DetailedReport extends Report {
     
-    static $template_file = 'templates/report1.html';
+    var $template_file = 'templates/report1.html';
     
     function printReport() {       
         ob_start();
-        require $template_file;
+        require $this->template_file;
         $template_code = ob_get_clean();
         parent::printReport($template_code);        
     }    
