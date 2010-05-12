@@ -247,6 +247,14 @@ class Calibration {
 		    
 		    //save file
 		    $chart->Render($this->filename);
+		    
+		    unset($this->chart);
+		    unset($this->data1);
+		    unset($this->data2);
+		    unset($this->data3);
+		    unset($this->data4);
+		    
+		    
 	    }
 	    
 	    //clear buffer
