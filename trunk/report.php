@@ -58,7 +58,7 @@ if (($result = validateEstimateCode($_GET, "estimate")) && $type <= 1 && $type >
     $r->addf("ORGNAME", $row["Organisation"]);
     $r->addf("ESTIMATEVERSION", $version);
     $r->addf("PROJECTPHASE", getPhase(intval($row["Phase"])));
-    $r->addf("E", $C["C_EFF_MEAN"]);
+    $r->addf("E", sprintf("%.1f", $C["C_EFF_MEAN"]));
     $r->addf("D80", sprintf("%.1f", $C["C_EFF_STD"] * 1.28155));
     $r->addf("D90", sprintf("%.1f", $C["C_EFF_STD"] * 1.64485));
     $r->addf("D95", sprintf("%.1f", $C["C_EFF_STD"] * 1.95996));

@@ -5,6 +5,13 @@
 <title>Printable Report</title>
 <link href="static/reports.css" rel="stylesheet" type="text/css" />
 </head>
+<style type="text/css">
+table {
+	width: 100%;
+	text-align: left;
+}
+
+</style>
 
 <body>
 <div id="reportbody">
@@ -16,7 +23,14 @@
       </h2></td>
     </tr>
   </table>
-  <h3>Project Vitals</h3>
+
+<!-- Table for the Data in the report -->
+  <table border="0" align="center" style="width: 600px">
+  <tr><td>
+    <h3>Project Vitals</h3>
+  </td></tr>
+  <tr><td>
+
   <table border="0" cellspacing="0" cellpadding="5">
     <tr>
       <td bgcolor="#FFFFCC"><strong>Project name</strong></td>
@@ -35,10 +49,18 @@
       <td>%%PROJECTPHASE%%</td>
     </tr>
   </table>
+
+  </td></tr>
+  <tr><td>
+
   <h3>Estimated Total Effort (Calibrated)<br />
   </h3>
   <p>Calibrated effort is combined from COCOMOII, Delphi &amp; PERT methods as available, calibrated based on past performance.<br />
   Number of calibration points: N=%%NUMCALIBRATION%%</p>
+
+  </td></tr>
+  <tr><td>
+
   <table border="0" cellspacing="0" cellpadding="5">
     <tr>
       <td bgcolor="#FFFFCC"><strong>Confidence</strong></td>
@@ -86,7 +108,15 @@
       <td>&nbsp;</td>
     </tr>
   </table>
+
+  </td></tr>
+  <tr><td>
+
   <h3>Estimated Total Effort (By Tool)</h3>
+
+  </td></tr>
+  <tr><td>
+
   <table border="0" cellspacing="0" cellpadding="6">
   <tr></tr>
   <tr></tr>
@@ -120,6 +150,9 @@
 
   </tr>
   </table>
+
+  </td></tr>
+</table>
 </div>
 </body>
 </html>
