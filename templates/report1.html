@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Printable Report</title>
+<link href="reports.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<div id="reportbody">
+  <table width="100%" border="0" cellspacing="0" cellpadding="3">
+    <tr>
+      <td width="300"><img src="GUESStitle2.png" width="291" height="128" alt="GUESS - Generic Universal Estimation System for Software" /></td>
+      <td align="right"><h1>%%ORGNAME%%</h1>
+        <h2> %%PROJECTNAME%%<br />
+      </h2></td>
+    </tr>
+  </table>
+  <h3>Project Vitals</h3>
+  <table border="0" cellspacing="0" cellpadding="5">
+    <tr>
+      <td bgcolor="#FFFFCC"><strong>Project name</strong></td>
+      <td>%%PROJECTNAME%%</td>
+    </tr>
+    <tr>
+      <td bgcolor="#FFFFCC"><strong>Organisation</strong></td>
+      <td>%%ORGNAME%%</td>
+    </tr>
+    <tr>
+      <td bgcolor="#FFFFCC"><strong>Estimate Version</strong></td>
+      <td>%%ESTIMATEVERSION%%</td>
+    </tr>
+    <tr>
+      <td bgcolor="#FFFFCC"><strong>Project Phase</strong></td>
+      <td>%%PROJECTPHASE%%</td>
+    </tr>
+  </table>
+  <h3>Estimated Total Effort (Calibrated)<br />
+  </h3>
+  <p>Calibrated effort is combined from COCOMOII, Delphi &amp; PERT methods as available, calibrated based on past performance.<br />
+  Number of calibration points: N=%%NUMCALIBRATION%%</p>
+  <table border="0" cellspacing="0" cellpadding="5">
+    <tr>
+      <td bgcolor="#FFFFCC"><strong>Confidence</strong></td>
+      <td bgcolor="#FFFFCC"></td>
+      <td colspan="4" bgcolor="#FFFFCC"><strong>Effort (man months):</strong></td>
+    </tr>
+    <tr>
+      <td bgcolor="#FFFFCC"><strong>80.0%</strong></td>
+      <td>&nbsp;</td>
+      <td>%%E80%%</td>
+      <td>&plusmn;</td>
+      <td>%%D80%%</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td bgcolor="#FFFFCC"><strong>90.0%</strong></td>
+      <td>&nbsp;</td>
+      <td>%%E90%%</td>
+      <td>&plusmn;</td>
+      <td>%%D90%%</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td bgcolor="#FFFFCC"><strong>95.0%</strong></td>
+      <td>&nbsp;</td>
+      <td>%%E95%%</td>
+      <td>&plusmn;</td>
+      <td>%%D95%%</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td bgcolor="#FFFFCC"><strong>99.0%</strong></td>
+      <td>&nbsp;</td>
+      <td>%%E99%%</td>
+      <td>&plusmn;</td>
+      <td>%%D99%%</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td bgcolor="#FFFFCC"><strong>99.9%</strong></td>
+      <td>&nbsp;</td>
+      <td>%%E99.9%%</td>
+      <td>&plusmn;</td>
+      <td>%%D99.9%%</td>
+      <td>&nbsp;</td>
+    </tr>
+  </table>
+  <h3>Estimated Total Effort (By Tool)</h3>
+  <table border="0" cellspacing="0" cellpadding="6">
+  <tr></tr>
+  <tr></tr>
+  <tr>
+    <td bgcolor="#FFFFCC"><strong>Method</strong></td>
+    <td bgcolor="#FFFFCC"><strong>Method Used?</strong></td>
+    <td bgcolor="#FFFFCC"><strong>Un-Adjusted Effort <br />
+      (man months):</strong></td>
+    <td bgcolor="#FFFFCC"><strong>Calibrated Effort <br />
+      (man months):</strong></td>
+  </tr>
+  <tr>
+    <td bgcolor="#FFFFCC"><strong>COCOMOII</strong></td>
+    <td>%%COCOMOYN%%</td>
+    <td>%%COCOMO%%</td>
+    <td>%%COCOMO-CALIB%%</td>
+
+  </tr>
+  <tr>
+    <td bgcolor="#FFFFCC"><strong>Delphi (Expert)</strong></td>
+    <td>%%DELPHIYN%%</td>
+    <td>%%DELPHI%%</td>
+    <td>%%DELPHI-CALIB%%</td>
+
+  </tr>
+  <tr>
+    <td bgcolor="#FFFFCC"><strong>PERT (Expert)</strong></td>
+    <td>%%PERTYN%%</td>
+    <td>%%PERT%%</td>
+    <td>%%PERT-CALIB%%</td>
+
+  </tr>
+  </table>
+</div>
+</body>
+</html>

@@ -56,6 +56,7 @@ class Calibration {
     var $linearfit_a = 0;
     var $linearfit_b = 0;
     var $correlation = 0;
+    var $N = 0;
         	   
     //data series for the chart output
     var $data;
@@ -164,6 +165,7 @@ class Calibration {
         $stddev = 0;
     
 	    if($N > 1) {
+	        $this->N = $N;
 	        $correlation = ($N * $sumxy - $sumx * $sumy) / sqrt(($N*$sumx2 - $sumx2)*($N*$sumy2 - $sumy2));
 	        $a = ($sumy * $sumx2 - $sumx * $sumxy) / ($N*$sumx2 - $sumx * $sumx);
 	        $b = ($N*$sumxy - $sumx*$sumy) / ($N*$sumx2 - $sumx*$sumx);
@@ -293,6 +295,10 @@ class Calibration {
     
     function getStDev() {
         return $this->stdev;
+    }
+    
+    function getN() {
+        return $this->N;
     }
     
     function getCalc1Name() {
