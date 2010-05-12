@@ -53,4 +53,22 @@ function FPComplexity($type, $comp1, $comp2, $low, $med, $high, $comp1high, $com
 		
 	} else return 0;
 }
+
+function combinedMean($means, $stdevs) {
+    $numerator = 0;
+    $denominator = 0;
+    for($i=0;$i<len($means);$i++) {
+        $numerator += $means[i] / $stdevs[i];
+        $denominator += 1 / $stdevs[i];
+    }
+    return $numerator / $denominator;
+}
+
+function combinedStDev($stdevs) {
+    $sum = 0;
+    for($i=0;$i<len($stdevs);$i++) {
+        $sum += 1 / ($stdev ^ 2); 
+    }
+    return (1 / math.sqrt($sum));    
+}
 ?>

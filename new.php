@@ -65,7 +65,7 @@ $input["Organisation"]->setHelp("This is the name of the organisation associated
 
 $input["Phase"] = new InputRadio("Phase", "Phase", "Project Phase", "[0-9]+", 0, 0, 5, 1, 1);
 $input["Phase"]->setHelp("This reflects the current phase of the project. Unless the project has started, leave this as default. This value affects confidence intervals for estimates generated.");
-$input["Phase"]->add(0, "No Work Undertaken");
+$input["Phase"]->add(0, "Estimation / Initial Requirements Analysis");
 $input["Phase"]->add(1, "Requirements Analysis Complete");
 $input["Phase"]->add(2, "Design Complete");
 $input["Phase"]->add(3, "Alpha Release");

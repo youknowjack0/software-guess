@@ -169,5 +169,24 @@ function tooltipify($str) {
     return "<pre>".htmlspecialchars(preg_replace(array("/\n/","/\r/"),array("\\n",""),str_replace("'","\'",$str)))."</pre>";
 }
 
+//assoc array of keys => phases
+// todo: implement this on new.php & estimatehome.php
+function getPhases() {
+    $p = array(
+		$p[0] = "Estimation / Initial Requirements Analysis",
+		$p[1] = "Requirements Analysis Complete",
+		$p[2] = "Design Complete",
+		$p[3] = "Alpha Release",
+		$p[4] = "Beta Release",
+		$p[5] = "Final Release"
+     );
+     return $p;    
+}
+
+function getPhase($n) {
+    $p = getPhases();
+    return $p[$n];
+}
+
 
 ?>
