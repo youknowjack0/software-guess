@@ -34,10 +34,13 @@ $Author: youknowjack@gmail.com $
 ob_start();
 require 'components/db.php';
 require 'Report/Report.php';
+require 'Calculation/Calculation.php';
+require 'components/utility.php';
+require 'question/Question.php';
 
 $type = intval($_GET["type"]);
 
-if ($result = validateEstimateCode($_GET, "estimate") && $type <= 1 && type >= 1) { //change this restriction if adding more report types
+if (($result = validateEstimateCode($_GET, "estimate")) && $type <= 1 && $type >= 1) { //change this restriction if adding more report types
     
     $row = mysql_fetch_assoc($result);
     $version = $row["LastIteration"]+1;
@@ -45,16 +48,27 @@ if ($result = validateEstimateCode($_GET, "estimate") && $type <= 1 && type >= 1
     
     $r = Report::newReport($type); //static report factory; instantiate the report
     
-    // add keys
+    // add fields
+    
+    Question::getAllQuestions($_GET["estimate"]);
+    
+    $allcalcs = Calculation::getAllCalculations();
+    $C =& Calculation::getC(Question::$Q, $allcalcs);
     
     $r->addf("%%PROJECTNAME%%", $row["ProjectName"]);
     $r->addf("%%ORGNAME%%", $row["Organisation"]);
     $r->addf("%%ESTIMATEVERSION%%", $version);
-    $r->addf("%%PROJECTPHASE%%", getPhase(intval($row["ProjectPhase"])));
-    //$r->addf
+    $r->addf("%%PROJECTPHASE%%", getPhase(intval($row["Phase"])));
+    $r->addf("%%E%%", $C["C_EFF_MEAN"]);
+    $r->addf("%%D80%%", sprintf("%.1f", $C["C_EFF_STD"] * 1.28155));
+    $r->addf("%%D90%%", sprintf("%.1f", $C["C_EFF_STD"] * 1.64485));
+    $r->addf("%%D95%%", sprintf("%.1f", $C["C_EFF_STD"] * 1.95996));
+    $r->addf("%%D99%%", sprintf("%.1f", $C["C_EFF_STD"] * 2.57583));
+    $r->addf("%%D99.9%%", sprintf("%.1f", $C["C_EFF_STD"] * 3.29053));
     
     // print report
     
+    $r->printReport();
 
 } else {
 
