@@ -48,7 +48,7 @@ if ($result = validateEstimateCode($_REQUEST, 'estimate')) {
     $template_breadcrumbs = getBreadcrumbs('estimatehome.php', array("estimate" => $estimate_code));
     $biglinks_items = array(
         array("name" => "Start Estimating", "file" => "estimate.php?estimate=".$estimate_code, "image" => "copyrightimages/pencil.png", "type" => "button"),
-        array("name" => "Extended Report", "file" => "report.php?estimate=".$estimate_code."&type=1", "image" => "copyrightimages/reports.png", "type" => "button", "disabled" => ($row["LastIteration"]>0?false:true)),
+        array("name" => "Printable Report", "file" => "report.php?estimate=".$estimate_code."&type=1", "image" => "copyrightimages/reports.png", "type" => "button", "disabled" => ($row["LastIteration"]>0?false:true)),
         /*array("name" => "Extended Report", "file" => "report_extended.php?estimate=".$estimate_code, "image" => "copyrightimages/largereport.png", "type" => "button", "disabled" => ($row["LastIteration"]>0?false:true)),*/
         array("name" => "Current Calculations", "file" => "calculations.php?estimate=".$estimate_code, "image" => "copyrightimages2/math.png", "type" => "button", "disabled" => ($row["LastIteration"]>0?false:true)),
         array("name" => "Change History", "file" => "changes.php?estimate=".$estimate_code, "image" => "copyrightimages/cert.png", "type" => "button", "disabled" => ($row["LastIteration"]>0?false:true))
@@ -84,7 +84,7 @@ if ($result = validateEstimateCode($_REQUEST, 'estimate')) {
 	$input["Phase"]->add(4, "Beta Release");
 	$input["Phase"]->add(5, "Final Release");
 	
-	$input["LastIteration"] = new InputText("LastIteration", "LastIteration", "Estimate Version", "[0-9]+", $row["LastIteration"], 0, 32000, -1, -1, true);
+	$input["LastIteration"] = new InputText("LastIteration", "LastIteration", "Estimate Version", "[0-9]+", $row["LastIteration"]+1, 0, 32000, -1, -1, true);
 	$input["LastIteration"]->setHelp("this is the estimate version - it always begins at zero. This number will be iterated automatically as the estimate is revised. You cannot change this number manually.");
 	
 	foreach($input as $i) {

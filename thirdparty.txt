@@ -39,4 +39,13 @@
     http://pchart.sourceforge.net/index.php
 ********************************************
     
-    
+********************************************
+5. Function Point Analysis
+     IFPUG: Function Point Counting Practices Manual. Release 4.1.International 
+     Function Point Users Group. Westerville, Ohio, USA (1999)
+********************************************
+
+********************************************
+6. COCOMO     
+     Boehm B. et al, Characteristics of Software Quality (1978)
+********************************************

@@ -57,18 +57,33 @@ function FPComplexity($type, $comp1, $comp2, $low, $med, $high, $comp1high, $com
 function combinedMean($means, $stdevs) {
     $numerator = 0;
     $denominator = 0;
-    for($i=0;$i<len($means);$i++) {
-        $numerator += $means[i] / $stdevs[i];
-        $denominator += 1 / $stdevs[i];
+    for($i=0;$i<count($means);$i++) {
+        if(abs($stdevs[$i]) > 0.01) {
+            $x = $stdevs[$i];
+        } else {
+            $x = 1;
+        }
+        $numerator += $means[$i] / $x;
+        $denominator += 1 / $x;
     }
-    return $numerator / $denominator;
+    if($denominator==0) {
+        return $numerator;
+    } else {
+        return $numerator / $denominator;
+    }
 }
 
 function combinedStDev($stdevs) {
     $sum = 0;
-    for($i=0;$i<len($stdevs);$i++) {
-        $sum += 1 / ($stdev ^ 2); 
-    }
-    return (1 / math.sqrt($sum));    
+    for($i=0;$i<count($stdevs);$i++) {
+        if(abs($stdevs[$i]) > 0.01) {
+            $sum += 1 / ($stdevs[$i] ^ 2);
+        } 
+    }    
+    if($sum==0) {
+        return 0;
+    } else {
+        return (1 / (sqrt($sum)));
+    }    
 }
 ?>

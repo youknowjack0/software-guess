@@ -73,6 +73,7 @@ if (($result = validateEstimateCode($_GET, "estimate")) && $type <= 1 && $type >
     $r->addf("cocomo-calib", sprintf("&micro;=%.1f, &#963;=%.1f", $C["C_EFF_COCOMO"],$C["C_EFF_COCOMO_STD"] ));
     $r->addf("delphi-calib", sprintf("&micro;=%.1f, &#963;=%.1f", $C["C_EFF_DELPHI"],$C["C_EFF_DELPHI_STD"]));
     $r->addf("pert-calib", sprintf("&micro;=%.1f, &#963;=%.1f", $C["C_EFF_PERT"],$C["C_EFF_PERT_STD"]));
+    $r->addf("numcalibration", $C["C_MIN_N"]);
     
     // print report
     
