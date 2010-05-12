@@ -69,6 +69,8 @@ while($rowp = mysql_fetch_assoc($rs_pairs)) { // iterate over pairs
      printf("Given input '%s', can estimate '%s': <br />&#956;=%.3f+%.3fx, &#963;= %.3f", $calib->getCalc1Name(), $calib->getCalc2Name(), $calib->getA(), $calib->getB(), $calib->getStDev());     
      print("<hr />");
      
+     unset($calib);
+     
 }
 
 // Footer file to show some copyright info etc...
