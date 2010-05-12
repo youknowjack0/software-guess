@@ -9,7 +9,7 @@ class Report {
         }
     }
     
-    function addField($key, $value) {
+    function addf($key, $value) {
         $fields[$key] = $value;    
     }       
     
@@ -17,6 +17,7 @@ class Report {
         foreach($fields as $k => $v) {
             $templatestring = str_replace("%%$k%%", $v, $templatestring);
         }
+        print($templatestring);
     }
 }
 
@@ -28,7 +29,7 @@ class DetailedReport extends Report {
         ob_start();
         require $template_file;
         $template_code = ob_get_clean();
-        parent::printReport($template_code);
+        parent::printReport($template_code);        
     }    
     
 }
