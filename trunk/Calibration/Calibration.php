@@ -193,6 +193,9 @@ class Calibration {
 	    $this->linearfit_b = $b;
 	    $this->correlation = $correlation;
 	    
+	    //output file name
+	    $this->filename = $calc1->Code . "~" . $calc2->Code     . ".png";	    
+	    
 	    if($createChart) {
 	    
 		    // CHART SETUP	    
@@ -242,8 +245,7 @@ class Calibration {
 	        $chart->drawTreshold(0,0,0,0,FALSE,FALSE,0);  
 		    $chart->drawXYGraph($this->data3->GetData(), $this->data2->GetDataDescription(), "Serie6", "Serie5");	    
 		    
-		    //output file name
-		    $this->filename = $calc1->Code . "~" . $calc2->Code     . ".png";
+
 		    
 		    //save file
 		    $chart->Render($this->filename);

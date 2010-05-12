@@ -37,6 +37,7 @@ $Author$
 // probably wont happen....
 
 // buffer output
+ini_set("memory_limit","64M");
 ob_start();
 
 require 'components/utility.php';
@@ -44,7 +45,7 @@ require 'components/db.php';
 require 'Calculation/Calculation.php';
 require 'question/Question.php';
 
-require 'Calibration/Calibration.php';
+require_once 'Calibration/Calibration.php';
 
 $header_title = "Calibration";
 $template_breadcrumbs = getBreadcrumbs('calibration.php', array());
@@ -56,8 +57,20 @@ $template_breadcrumbs = getBreadcrumbs('calibration.php', array());
 $sql = "SELECT * FROM CalibrationPairs";
 $rs_pairs = mysql_query($sql);
 
+// one image update per page load
+$total_images = mysql_num_rows($rs_pairs);
+$sql = "SELECT * FROM System";
+$rs_image_num = mysql_query($sql);
+$row_image_num = mysql_fetch_assoc($rs_image_num);
+$current = $row_image_num["Value"];
+$sql = sprintf("UPDATE System SET Value=%d WHERE ID=1", $current < ($total_images-1) ? $current+1 : 0);
+mysql_query($sql);
+
+$i=0;
 while($rowp = mysql_fetch_assoc($rs_pairs)) { // iterate over pairs
-     $calib = new Calibration($rowp["Calc1"], $rowp["Calc2"], true);
+     
+    
+     $calib = new Calibration($rowp["Calc1"], $rowp["Calc2"], $i==$current); //only build new chart if it's this chart's turn
      $calib->setDisplayText($rowp["DisplayText"]);
      $calib->setDescription($rowp["Description"]);
      
@@ -70,7 +83,8 @@ while($rowp = mysql_fetch_assoc($rs_pairs)) { // iterate over pairs
      print("<hr />");
      
      unset($calib);
-     
+
+     $i++;
 }
 
 // Footer file to show some copyright info etc...
