@@ -48,7 +48,7 @@ if ($result = validateEstimateCode($_REQUEST, 'estimate')) {
     $template_breadcrumbs = getBreadcrumbs('estimatehome.php', array("estimate" => $estimate_code));
     $biglinks_items = array(
         array("name" => "Start Estimating", "file" => "estimate.php?estimate=".$estimate_code, "image" => "copyrightimages/pencil.png", "type" => "button"),
-        array("name" => "Report", "file" => "report.php?estimate=".$estimate_code."&type=1", "image" => "copyrightimages/reports.png", "type" => "button", "disabled" => ($row["LastIteration"]>0?false:true)),
+        array("name" => "Extended Report", "file" => "report.php?estimate=".$estimate_code."&type=1", "image" => "copyrightimages/reports.png", "type" => "button", "disabled" => ($row["LastIteration"]>0?false:true)),
         /*array("name" => "Extended Report", "file" => "report_extended.php?estimate=".$estimate_code, "image" => "copyrightimages/largereport.png", "type" => "button", "disabled" => ($row["LastIteration"]>0?false:true)),*/
         array("name" => "Current Calculations", "file" => "calculations.php?estimate=".$estimate_code, "image" => "copyrightimages2/math.png", "type" => "button", "disabled" => ($row["LastIteration"]>0?false:true)),
         array("name" => "Change History", "file" => "changes.php?estimate=".$estimate_code, "image" => "copyrightimages/cert.png", "type" => "button", "disabled" => ($row["LastIteration"]>0?false:true))
