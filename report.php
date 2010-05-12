@@ -31,7 +31,6 @@ $LastChangedDate: 2010-05-05 02:30:57 +0800 (Wed, 05 May 2010) $
 $Revision: 50 $
 $Author: youknowjack@gmail.com $
 */
-ob_start();
 require 'components/db.php';
 require 'Report/Report.php';
 require 'Calculation/Calculation.php';
@@ -55,16 +54,25 @@ if (($result = validateEstimateCode($_GET, "estimate")) && $type <= 1 && $type >
     $allcalcs = Calculation::getAllCalculations();
     $C =& Calculation::getC(Question::$Q, $allcalcs);
     
-    $r->addf("%%PROJECTNAME%%", $row["ProjectName"]);
-    $r->addf("%%ORGNAME%%", $row["Organisation"]);
-    $r->addf("%%ESTIMATEVERSION%%", $version);
-    $r->addf("%%PROJECTPHASE%%", getPhase(intval($row["Phase"])));
-    $r->addf("%%E%%", $C["C_EFF_MEAN"]);
-    $r->addf("%%D80%%", sprintf("%.1f", $C["C_EFF_STD"] * 1.28155));
-    $r->addf("%%D90%%", sprintf("%.1f", $C["C_EFF_STD"] * 1.64485));
-    $r->addf("%%D95%%", sprintf("%.1f", $C["C_EFF_STD"] * 1.95996));
-    $r->addf("%%D99%%", sprintf("%.1f", $C["C_EFF_STD"] * 2.57583));
-    $r->addf("%%D99.9%%", sprintf("%.1f", $C["C_EFF_STD"] * 3.29053));
+    $r->addf("PROJECTNAME", $row["ProjectName"]);
+    $r->addf("ORGNAME", $row["Organisation"]);
+    $r->addf("ESTIMATEVERSION", $version);
+    $r->addf("PROJECTPHASE", getPhase(intval($row["Phase"])));
+    $r->addf("E", $C["C_EFF_MEAN"]);
+    $r->addf("D80", sprintf("%.1f", $C["C_EFF_STD"] * 1.28155));
+    $r->addf("D90", sprintf("%.1f", $C["C_EFF_STD"] * 1.64485));
+    $r->addf("D95", sprintf("%.1f", $C["C_EFF_STD"] * 1.95996));
+    $r->addf("D99", sprintf("%.1f", $C["C_EFF_STD"] * 2.57583));
+    $r->addf("D99.9", sprintf("%.1f", $C["C_EFF_STD"] * 3.29053));
+    $r->addf("cocomoyn", isset($C['C_EFF_COCOMO']) && $C['C_EFF_COCOMO'] != null ? "Yes" : "No");
+    $r->addf("delphiyn", isset($C['C_EFF_DELPHI']) && $C['C_EFF_DELPHI'] != null ? "Yes" : "No");
+    $r->addf("pertyn", isset($C['C_EFF_PERT']) && $C['C_EFF_PERT'] != null ? "Yes" : "No");
+    $r->addf("cocomo", sprintf("%.1f", $C["COCOMO_E"]));
+    $r->addf("delphi", sprintf("%.1f", $C["DELPHI_EFFORT"]));
+    $r->addf("pert", sprintf("%.1f", $C["PERT_EFFORT"]));
+    $r->addf("cocomo-calib", sprintf("&micro;=%.1f, &#963;=%.1f", $C["C_EFF_COCOMO"],$C["C_EFF_COCOMO_STD"] ));
+    $r->addf("delphi-calib", sprintf("&micro;=%.1f, &#963;=%.1f", $C["C_EFF_DELPHI"],$C["C_EFF_DELPHI_STD"]));
+    $r->addf("pert-calib", sprintf("&micro;=%.1f, &#963;=%.1f", $C["C_EFF_PERT"],$C["C_EFF_PERT_STD"]));
     
     // print report
     
@@ -75,8 +83,4 @@ if (($result = validateEstimateCode($_GET, "estimate")) && $type <= 1 && $type >
     $header_title = "Report";
     $template_error = "An error occured (perhaps the estimate code is invalid?) " . mysql_error();
 }
-    
-$template_body = ob_get_clean();
-require 'templates/main.php';
-
 ?>
